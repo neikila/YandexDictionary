@@ -7,4 +7,8 @@ import java.util.ArrayList;
  */
 public interface DbService {
     ArrayList <String> getLanguages();
+
+    String translate(String input);
+
+    void save(String input, String result);
 }

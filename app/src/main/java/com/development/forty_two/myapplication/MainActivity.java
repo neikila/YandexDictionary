@@ -15,11 +15,17 @@ import java.util.Vector;
 
 import dbservice.DbService;
 import dbservice.DbServiceStubImpl;
+import dictionary.Callback;
+import dictionary.Dictionary;
 import yandex.YandexCommunicator;
+import yandex.YandexCommunicatorStubImpl;
 
 public class MainActivity extends AppCompatActivity {
-    YandexCommunicator communicator;
-    DbService dbService = new DbServiceStubImpl();
+    Dictionary dictionary;
+
+    public MainActivity() {
+        dictionary = new Dictionary();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,9 +42,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!separately.isChecked()) {
-                    output.setText(communicator.translate(input.getText().toString()));
+                    dictionary.translate(input.getText().toString(),
+                            new Callback<String>() {
+                                @Override
+                                public void setTranslation(String result) {
+                                    output.setText(result);
+                                }
+                            });
                 } else {
-                    Vector<String> result = communicator.translateSeparately(input.getText().toString());
                     // TODO многострочный вывод
                 }
             }
@@ -47,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
 
-        ArrayAdapter <String> adapter1 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down, R.id.language, dbService.getLanguages());
-        ArrayAdapter <String> adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down, R.id.language, dbService.getLanguages());
+        ArrayAdapter <String> adapter1 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down, R.id.language, dictionary.getLanguages());
+        ArrayAdapter <String> adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down, R.id.language, dictionary.getLanguages());
         from.setAdapter(adapter1);
         from.setSelection(0);
         to.setAdapter(adapter2);
