@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:id="@+id/chooseLanguageBar"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -62,16 +62,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@id/editTextOutput"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:id="@+id/linearLayout">
 
         <Switch
             android:id="@+id/switchTranslateWords"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/main_switch_translate_separately" />
+            android:text="@string/main_switch_translate_separately"
+            android:checked="false" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/button_translate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/main_translate_button"
