@@ -22,7 +22,7 @@
             android:layout_height="50dp"
             android:id="@+id/rotateButton"
             android:src="@drawable/rotate_button_small"
-            android:background="#FFFFF"
+            android:background="#FFFFFF"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
             android:layout_gravity="center_vertical"/>

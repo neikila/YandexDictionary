@@ -61,23 +61,8 @@
         android:text="@string/settings_translate_auto_language"
         android:layout_marginTop="10dp"/>
 
+    <!-- Lower part-->
 
-
-    <TextView
-        android:id="@+id/info_comande"
-        android:layout_above="@id/text_yandex_subscribe"
-        android:text="@string/team_name"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"/>
-
-    <TextView
-        android:id="@+id/text_yandex_subscribe"
-        android:layout_above="@id/link_yandex_translate"
-        android:text="@string/yandex_subscribe"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"/>
     <TextView
         android:id="@+id/link_yandex_translate"
         android:layout_width="fill_parent"
@@ -88,8 +73,20 @@
         android:gravity="center_horizontal"/>
 
 
+    <TextView
+        android:id="@+id/text_yandex_subscribe"
+        android:layout_above="@id/link_yandex_translate"
+        android:text="@string/yandex_subscribe"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"/>
 
-
-
+    <TextView
+        android:id="@+id/info_comande"
+        android:layout_above="@id/text_yandex_subscribe"
+        android:text="@string/team_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"/>
 
 </RelativeLayout>
