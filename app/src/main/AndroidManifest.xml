@@ -3,6 +3,7 @@
     package="com.development.forty_two.myapplication" >
 
     <application
+        android:name=".ApplicationModified"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

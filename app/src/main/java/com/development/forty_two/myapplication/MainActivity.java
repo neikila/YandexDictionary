@@ -1,5 +1,7 @@
 package com.development.forty_two.myapplication;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -11,17 +13,24 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 
-import java.util.Vector;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
-import dbservice.DbService;
-import dbservice.DbServiceStubImpl;
 import dictionary.Callback;
 import dictionary.Dictionary;
-import yandex.YandexCommunicator;
-import yandex.YandexCommunicatorStubImpl;
 
 public class MainActivity extends AppCompatActivity {
-    Dictionary dictionary;
+    private Dictionary dictionary;
+    private Handler handler;
+
+    static final public String KEY = "Key";
+    static final public String TRANSLATE_IS_READY = "TranslateIsReady";
+    static final public String TRANSLATE_RESULT = "result";
+
+    @Subscribe
+    public void react(Message msg) {
+        handler.sendMessage(msg);
+    }
 
     public MainActivity() {
         dictionary = new Dictionary();
@@ -31,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Bus bus = ((ApplicationModified) getApplication()).getBus();
+        bus.register(this);
+        dictionary.setBus(bus);
 
         final EditText input = (EditText) findViewById(R.id.editTextInput);
         final EditText output = (EditText) findViewById(R.id.editTextOutput);
@@ -42,13 +55,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!separately.isChecked()) {
-                    dictionary.translate(input.getText().toString(),
-                            new Callback<String>() {
-                                @Override
-                                public void setTranslation(String result) {
-                                    output.setText(result);
-                                }
-                            });
+                    dictionary.translate(input.getText().toString());
                 } else {
                     // TODO многострочный вывод
                 }
@@ -64,6 +71,21 @@ public class MainActivity extends AppCompatActivity {
         from.setSelection(0);
         to.setAdapter(adapter2);
         to.setSelection(1);
+
+        // TODO тут может быть утечка памяти, но я не въехал пока откуда она тут (нужно пересмотреть лекцию)
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle bundle = msg.getData();
+                if (bundle.containsKey(KEY)) {
+                    switch (bundle.getString(KEY)) {
+                        case TRANSLATE_IS_READY:
+                            output.setText(bundle.getString(TRANSLATE_RESULT));
+                            break;
+                    }
+                }
+            }
+        };
     }
 
     @Override
