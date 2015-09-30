@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         from.setAdapter(adapter1);
         from.setSelection(0);
         to.setAdapter(adapter2);
-        to.setSelection(1);g
+        to.setSelection(1);
 
         // TODO тут может быть утечка памяти, но я не въехал пока откуда она тут (нужно пересмотреть лекцию)
         handler = new Handler() {
