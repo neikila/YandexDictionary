@@ -65,12 +65,14 @@ public class MainActivity extends AppCompatActivity {
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
 
-        ArrayAdapter <String> adapter1 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down, R.id.language, dictionary.getLanguages());
-        ArrayAdapter <String> adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down, R.id.language, dictionary.getLanguages());
+        ArrayAdapter <String> adapter1 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down,
+                R.id.language, dictionary.getLanguages());
+        ArrayAdapter <String> adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down,
+                R.id.language, dictionary.getLanguages());
         from.setAdapter(adapter1);
         from.setSelection(0);
         to.setAdapter(adapter2);
-        to.setSelection(1);
+        to.setSelection(1);g
 
         // TODO тут может быть утечка памяти, но я не въехал пока откуда она тут (нужно пересмотреть лекцию)
         handler = new Handler() {
@@ -86,6 +88,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Bus bus = ((ApplicationModified) getApplication()).getBus();
+        bus.unregister(this);
     }
 
     @Override
@@ -109,4 +118,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

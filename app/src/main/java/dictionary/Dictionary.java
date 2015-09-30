@@ -76,7 +76,5 @@ public class Dictionary {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
         }
-
-
     }
 }
