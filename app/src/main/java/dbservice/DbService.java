@@ -5,6 +5,8 @@ import java.util.Map;
 /**
  * Created by neikila on 25.09.15.
  */
+
+//TODO заменить интерфейс на абстрактный класс и наследоваться от OrmLiteSqliteOpenHelper?
 public interface DbService {
     Map<String, String> getLanguages();
 
