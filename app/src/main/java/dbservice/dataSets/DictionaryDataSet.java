@@ -25,6 +25,12 @@ public class DictionaryDataSet {
     public DictionaryDataSet() {
     }
 
+    public DictionaryDataSet(String word, String translate, String language) {
+        this.word = word;
+        this.translate = translate;
+        this.language = language;
+    }
+
     public int getId() {
         return id;
     }
@@ -47,5 +53,13 @@ public class DictionaryDataSet {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public String getTranslate() {
+        return translate;
+    }
+
+    public void setTranslate(String translate) {
+        this.translate = translate;
     }
 }

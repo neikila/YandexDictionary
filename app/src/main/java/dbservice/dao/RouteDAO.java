@@ -4,7 +4,7 @@ import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.ArrayList;
 
 import dbservice.dataSets.RouteDataSet;
 
@@ -19,7 +19,9 @@ public class RouteDAO extends BaseDaoImpl<RouteDataSet, Integer> {
 
     }
 
-    public void setRoutes(Map<String, String> routes) {
-        //TODO
+    public void saveRoutes(ArrayList<RouteDataSet> routes) throws SQLException {
+        for (int i = 0; i < routes.size(); i++) {
+            create(routes.get(i));
+        }
     }
 }
