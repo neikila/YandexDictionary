@@ -7,13 +7,17 @@ import android.os.Message;
 import com.development.forty_two.myapplication.MainActivity;
 import com.squareup.otto.Bus;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import dbservice.DBService;
 import dbservice.DBServiceStubImpl;
+import utils.MessageKey;
 import yandex.YandexCommunicator;
 import yandex.YandexCommunicatorStubImpl;
+import utils.ErrorTypes;
 
 /**
  * Created by neikila on 25.09.15.
@@ -92,6 +96,10 @@ public class Dictionary {
         languages.put("ja", "японский");
     }
 
+    public ArrayList<String> getLanguages() {
+        return new ArrayList<>(languages.values());
+    }
+
     public void setBus(Bus bus) {
         this.bus = bus;
     }
@@ -114,18 +122,25 @@ public class Dictionary {
         @Override
         protected Void doInBackground(String... params) {
             String input = params[0];
+            String targetLanguage = params[1];
             String result;
-            if ((result = dbService.translate(input)) == null) {
-                result = communicator.translate(input);
-                // TODO analyse of result
-                dbService.saveTranslate(input, result);
-            }
             Message msg = new Message();
             Bundle bundle = new Bundle();
-            bundle.putString(MainActivity.KEY, MainActivity.TRANSLATE_IS_READY);
-            bundle.putString(MainActivity.TRANSLATE_RESULT, result);
-            msg.setData(bundle);
 
+            try {
+                if ((result = dbService.translate(input, targetLanguage)) == null) {
+                    result = communicator.translate(input);
+                    // TODO analyse of result
+                    dbService.saveTranslate(input, result, targetLanguage);
+                }
+                bundle.putString(MessageKey.KEY.toString(), MessageKey.TRANSLATE_IS_READY.toString());
+                bundle.putString(MessageKey.TRANSLATE_RESULT.toString(), result);
+            } catch (SQLException e) {
+                bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.SqlError.toString());
+            }
+
+            msg.setData(bundle);
             bus.post(msg);
             return null;
         }

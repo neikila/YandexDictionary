@@ -26,8 +26,10 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
     private DictionaryDAO dictionaryDAO = null;
     private RouteDAO routeDAO = null;
 
-    public DBServiceImpl(Context context) {
+    public DBServiceImpl(Context context) throws SQLException {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        setDictionaryDAO();
+        setRoutesDAO();
     }
 
     @Override
@@ -47,33 +49,29 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
 
     @Override
     public String translate(String input, String language) throws SQLException {
-        if (dictionaryDAO == null) setDictionaryDAO();
         return dictionaryDAO.translate(input, language);
     }
 
     @Override
     public void saveTranslate(String input, String result, String language) throws SQLException {
-        if (dictionaryDAO == null) setDictionaryDAO();
         dictionaryDAO.saveTranslate(input, result, language);
     }
 
     @Override
     public void clearDictionary() throws SQLException {
-        if (dictionaryDAO == null) setDictionaryDAO();
         dictionaryDAO.clearDictionary();
     }
 
     @Override
     public void saveRoutes(ArrayList<RouteDataSet> routes) throws SQLException {
-        if (routeDAO == null) setRoutesDAO();
         routeDAO.saveRoutes(routes);
     }
 
-    public synchronized void setDictionaryDAO() throws SQLException {
+    private synchronized void setDictionaryDAO() throws SQLException {
         dictionaryDAO = new DictionaryDAO(getConnectionSource(), DictionaryDataSet.class);
     }
 
-    public synchronized void setRoutesDAO() throws SQLException {
+    private synchronized void setRoutesDAO() throws SQLException {
         routeDAO = new RouteDAO(getConnectionSource(), RouteDataSet.class);
     }
 }

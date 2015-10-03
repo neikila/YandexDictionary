@@ -16,16 +16,12 @@ import android.widget.Switch;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import dictionary.Callback;
 import dictionary.Dictionary;
+import utils.MessageKey;
 
 public class MainActivity extends AppCompatActivity {
     private Dictionary dictionary;
     private Handler handler;
-
-    static final public String KEY = "Key";
-    static final public String TRANSLATE_IS_READY = "TranslateIsReady";
-    static final public String TRANSLATE_RESULT = "result";
 
     @Subscribe
     public void react(Message msg) {
@@ -65,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
 
-        ArrayAdapter <String> adapter1 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down,
+        ArrayAdapter <String> adapter1 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
                 R.id.language, dictionary.getLanguages());
-        ArrayAdapter <String> adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down,
+        ArrayAdapter <String> adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
                 R.id.language, dictionary.getLanguages());
         from.setAdapter(adapter1);
         from.setSelection(0);
@@ -79,13 +75,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleMessage(Message msg) {
                 Bundle bundle = msg.getData();
-                if (bundle.containsKey(KEY)) {
-                    switch (bundle.getString(KEY)) {
+                String key = bundle.getString(MessageKey.KEY.toString());
+                if (key != null) {
+                    switch (MessageKey.valueOf(key)) {
                         case TRANSLATE_IS_READY:
-                            output.setText(bundle.getString(TRANSLATE_RESULT));
+                            output.setText(bundle.getString(MessageKey.TRANSLATE_RESULT.toString()));
                             break;
                     }
                 }
+
             }
         };
     }
