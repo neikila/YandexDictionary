@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import yandex.YandexCommunicator;
+import yandex.YandexCommunicatorImpl;
 import yandex.YandexCommunicatorStubImpl;
 
 /**
@@ -12,10 +13,8 @@ import yandex.YandexCommunicatorStubImpl;
 public class DbServiceStubImpl implements DbService{
     private ArrayList<String> languages;
     private HashMap <String, String> dictionary;
-    private YandexCommunicator communicator;
 
     public DbServiceStubImpl() {
-        communicator = new YandexCommunicatorStubImpl();
 
         languages = new ArrayList<>();
         languages.add("Russian");

@@ -1,13 +1,14 @@
 package yandex;
 
+import java.util.List;
 import java.util.Vector;
+
 
 /**
  * Created by neikila on 25.09.15.
  */
 public class YandexCommunicatorStubImpl implements YandexCommunicator {
     private Vector<String> result;
-    final private String YANDEX_KEY = "trnsl.1.1.20150930T163208Z.45fb59a5f5708995.975b4f03544ec40e09e125fcdd1668501bc3398e";
     public YandexCommunicatorStubImpl() {
         result = new Vector<>();
         result.add("Second word");
@@ -15,12 +16,11 @@ public class YandexCommunicatorStubImpl implements YandexCommunicator {
     }
 
     @Override
-    public String translate(String input) {
-        return "TestValue";
-    }
+    public String translate(String inLang, String outLang,String input) { return "Test value";}
 
     @Override
-    public Vector<String> translateSeparately(String input) {
+    public Vector<String> translateSeparately(String inputLanguage, String outLanguage, String text) {
         return result;
     }
+
 }

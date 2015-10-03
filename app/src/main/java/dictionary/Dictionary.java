@@ -9,12 +9,14 @@ import com.development.forty_two.myapplication.ApplicationModified;
 import com.development.forty_two.myapplication.MainActivity;
 import com.squareup.otto.Bus;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import dbservice.DbService;
 import dbservice.DbServiceStubImpl;
 import yandex.YandexCommunicator;
+import yandex.YandexCommunicatorImpl;
 import yandex.YandexCommunicatorStubImpl;
 
 /**
@@ -26,7 +28,7 @@ public class Dictionary {
     private Bus bus;
 
     public Dictionary() {
-        communicator = new YandexCommunicatorStubImpl();
+        communicator = new YandexCommunicatorImpl();
         dbService = new DbServiceStubImpl();
     }
 
@@ -58,7 +60,11 @@ public class Dictionary {
             String input = params[0];
             String result;
             if ((result = dbService.translate(input)) == null) {
-                result = communicator.translate(input);
+                try {
+                    result = communicator.translate("en","ru",input); //TODO Hardcode
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 // TODO analyse of result
                 dbService.save(input, result);
             }
