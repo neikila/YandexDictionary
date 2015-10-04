@@ -34,20 +34,6 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         setDictionaryDAO();
         setRoutesDAO();
         setLanguagesDAO();
-
-        // TODO для тестов
-        clearDictionary();
-        saveTranslate("hello", "Привет", "ru");
-
-        TableUtils.clearTable(getConnectionSource(), RouteDataSet.class);
-        routeDAO.saveRoute(new RouteDataSet("tl", "ca"));
-        routeDAO.saveRoute(new RouteDataSet("tl", "ru"));
-        routeDAO.saveRoute(new RouteDataSet("ca", "tl"));
-        routeDAO.saveRoute(new RouteDataSet("ca", "ru"));
-        routeDAO.saveRoute(new RouteDataSet("ru", "ca"));
-        routeDAO.saveRoute(new RouteDataSet("ru", "tl"));
-        routeDAO.saveRoute(new RouteDataSet("ru", "en"));
-        routeDAO.saveRoute(new RouteDataSet("en", "ru"));
     }
 
     private void presetLanguages() throws SQLException {
@@ -67,16 +53,15 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         languageDAO.saveLanguage("cy", "Валлийский");
         languageDAO.saveLanguage("vi", "Вьетнамский");
         languageDAO.saveLanguage("hu", "Венгерский");
-        languageDAO.saveLanguage("ht", "Гаитянский");
-        languageDAO.saveLanguage("id", "Индонезийский");
         languageDAO.saveLanguage("mg", "Малагасийский");
-        languageDAO.saveLanguage("pt", "Португальский");
         languageDAO.saveLanguage("gl", "Галисийский");
+        languageDAO.saveLanguage("ht", "Гаитянский");
         languageDAO.saveLanguage("nl", "Голландский");
         languageDAO.saveLanguage("el", "Греческий");
         languageDAO.saveLanguage("ka", "Грузинский");
         languageDAO.saveLanguage("da", "Датский");
         languageDAO.saveLanguage("he", "Иврит");
+        languageDAO.saveLanguage("id", "Индонезийский");
         languageDAO.saveLanguage("ga", "Ирландский");
         languageDAO.saveLanguage("it", "Итальянский");
         languageDAO.saveLanguage("is", "Исландский");
@@ -97,6 +82,7 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         languageDAO.saveLanguage("no", "Норвежский");
         languageDAO.saveLanguage("fa", "Персидский");
         languageDAO.saveLanguage("pl", "Польский");
+        languageDAO.saveLanguage("pt", "Португальский");
         languageDAO.saveLanguage("ro", "Румынский");
         languageDAO.saveLanguage("ru", "Русский");
         languageDAO.saveLanguage("sr", "Сербский");
@@ -117,6 +103,12 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         languageDAO.saveLanguage("sv", "Шведский");
         languageDAO.saveLanguage("et", "Эстонский");
         languageDAO.saveLanguage("ja", "Японский");
+
+        if (routeDAO == null) {
+            setRoutesDAO();
+        }
+        routeDAO.saveRoute(new RouteDataSet("ru", "en"));
+        routeDAO.saveRoute(new RouteDataSet("en", "ru"));
     }
 
     @Override
