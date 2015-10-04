@@ -1,5 +1,6 @@
 package dbservice;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,11 +14,8 @@ import yandex.YandexCommunicatorStubImpl;
  */
 public class DBServiceStubImpl implements DBService {
     private Map<String, String> dictionary;
-    private YandexCommunicator communicator;
 
     public DBServiceStubImpl() {
-        communicator = new YandexCommunicatorStubImpl();
-
         dictionary = new HashMap<>();
         dictionary.put("Hello", "Привет");
         dictionary.put("hello", "привет");
@@ -42,5 +40,34 @@ public class DBServiceStubImpl implements DBService {
 
     @Override
     public void saveRoutes(ArrayList<RouteDataSet> routes) {
+    }
+
+    @Override
+    public ArrayList<String> getToLangPairedWithGivenLang(String language) throws SQLException {
+        ArrayList<String> result = new ArrayList<>();
+        switch (language) {
+            case "Тагальский":
+                result.add("Каталанский");
+                result.add("Русский");
+                break;
+            case "Русский":
+                result.add("Тагальский");
+                result.add("Каталанский");
+                break;
+            case "Каталанский":
+                result.add("Тагальский");
+                result.add("Русский");
+                break;
+        }
+        return result;
+    }
+
+    @Override
+    public ArrayList<String> getAllLangs() {
+        ArrayList<String> result = new ArrayList<>();
+        result.add("Каталанский");
+        result.add("Тагальский");
+        result.add("Русский");
+        return result;
     }
 }

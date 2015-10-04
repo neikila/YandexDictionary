@@ -17,4 +17,8 @@ public interface DBService {
     void clearDictionary() throws SQLException;
 
     void saveRoutes(ArrayList<RouteDataSet> routes) throws SQLException;
+
+    ArrayList<String> getToLangPairedWithGivenLang(String language) throws SQLException;
+
+    ArrayList<String> getAllLangs() throws SQLException;
 }

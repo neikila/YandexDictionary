@@ -4,22 +4,28 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import dictionary.Dictionary;
+
 /**
  * Created by ivan on 01.10.15
  */
 @DatabaseTable(tableName = "Dictionary")
 public class DictionaryDataSet {
+    public final static String WORD = "word";
+    public final static String TRANSLATE = "translate";
+    public final static String LANGUAGE = "language";
+
     @DatabaseField(generatedId = true)
     private int id;
 
-    @DatabaseField(canBeNull = false, dataType = DataType.STRING, columnName = "word")
+    @DatabaseField(canBeNull = false, dataType = DataType.STRING, columnName = WORD)
     private String word;
 
-    @DatabaseField(canBeNull = false, dataType = DataType.STRING, columnName = "translate")
+    @DatabaseField(canBeNull = false, dataType = DataType.STRING, columnName = TRANSLATE)
     private String translate;
 
 
-    @DatabaseField(canBeNull = false, dataType = DataType.STRING, columnName = "language")
+    @DatabaseField(canBeNull = false, dataType = DataType.STRING, columnName = LANGUAGE)
     private String language;
 
     public DictionaryDataSet() {

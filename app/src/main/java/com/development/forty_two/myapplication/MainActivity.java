@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,6 +16,8 @@ import android.widget.Switch;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import java.util.ArrayList;
 
 import dictionary.Dictionary;
 import utils.MessageKey;
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public MainActivity() {
-        dictionary = new Dictionary();
+        dictionary = Dictionary.getInstance();
     }
 
     @Override
@@ -46,29 +49,50 @@ public class MainActivity extends AppCompatActivity {
 
         final Switch separately = (Switch) findViewById(R.id.switchTranslateWords);
 
+        final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
+        final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
+
+        from.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ArrayList <String> toLangs = dictionary.getToLangPairedWithGivenLang((String) from.getSelectedItem());
+                ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
+                String currentLang = (String) to.getSelectedItem();
+                temp.clear();
+                temp.addAll(toLangs);
+                if (toLangs.contains(currentLang)) {
+                    to.setSelection(temp.getPosition(currentLang));
+                } else {
+                    to.setSelection(0);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        ArrayAdapter <String> adapter1 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
+                R.id.language, dictionary.getLanguages());
+        from.setAdapter(adapter1);
+        from.setSelection(0);
+
+        ArrayAdapter <String> adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
+                R.id.language, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
+        to.setAdapter(adapter2);
+        to.setSelection(0);
+
         Button translate = (Button) findViewById(R.id.button_translate);
         translate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!separately.isChecked()) {
-                    dictionary.translate(input.getText().toString());
+                    dictionary.translate(input.getText().toString(), (String) to.getSelectedItem());
                 } else {
                     // TODO многострочный вывод
                 }
             }
         });
-
-        final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
-        final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
-
-        ArrayAdapter <String> adapter1 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
-                R.id.language, dictionary.getLanguages());
-        ArrayAdapter <String> adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
-                R.id.language, dictionary.getLanguages());
-        from.setAdapter(adapter1);
-        from.setSelection(0);
-        to.setAdapter(adapter2);
-        to.setSelection(1);
 
         // TODO тут может быть утечка памяти, но я не въехал пока откуда она тут (нужно пересмотреть лекцию)
         handler = new Handler() {
