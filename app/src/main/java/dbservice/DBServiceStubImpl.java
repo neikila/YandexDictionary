@@ -25,7 +25,7 @@ public class DBServiceStubImpl implements DBService {
     }
 
     @Override
-    public String translate(String input, String to) {
+    public String translate(String input, String from, String to) {
         return dictionary.get(input);
     }
 
@@ -36,6 +36,16 @@ public class DBServiceStubImpl implements DBService {
 
     @Override
     public void clearDictionary() {
+    }
+
+    @Override
+    public String getReduced(String language) throws SQLException {
+        String result = null;
+        switch (language) {
+            case "Русский": result = "ru"; break;
+            case "Английский": result = "en"; break;
+        }
+        return null;
     }
 
     @Override

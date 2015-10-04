@@ -33,8 +33,6 @@ public class Dictionary {
     private Dictionary() {
         communicator = new YandexCommunicatorImpl();
         dbService = DBHelperFactory.getHelper();
-//        dbService = new DBServiceStubImpl();
-
     }
 
     public static Dictionary getInstance() {
@@ -55,7 +53,7 @@ public class Dictionary {
 
     public ArrayList<String> getToLangPairedWithGivenLang(String lang) {
         try {
-            return dbService.getToLangPairedWithGivenLang(lang);
+            return dbService.getToLangPairedWithGivenLang(dbService.getReduced(lang));
         } catch (SQLException e) {
             // TODO log
             return null;
@@ -71,9 +69,9 @@ public class Dictionary {
         return input;
     }
 
-    public void translate(String input, String targetLanguage) {
+    public void translate(String input, String sourceLanguage, String targetLanguage) {
         input = reduce(input);
-        new TranslateWordAsyncTask().execute(input, targetLanguage);
+        new TranslateWordAsyncTask().execute(input, sourceLanguage, targetLanguage);
     }
 
     public void translateSeparately(String input) {
@@ -84,21 +82,26 @@ public class Dictionary {
         @Override
         protected Void doInBackground(String... params) {
             String input = params[0];
-            String targetLanguage = params[1];
+            String sourceLanguage = params[1];
+            String targetLanguage = params[2];
             String result;
 
             Message msg = new Message();
             Bundle bundle = new Bundle();
 
+
             try {
-                if ((result = dbService.translate(input, targetLanguage)) == null) {
+                String from = dbService.getReduced(sourceLanguage);
+                String to = dbService.getReduced(targetLanguage);
+
+                if ((result = dbService.translate(input, from, to)) == null) {
                     try {
-                        result = communicator.translate("en","ru",input); //TODO Hardcode
+                        result = communicator.translate(from, to, input);
+                        // TODO analyse of result
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    // TODO analyse of result
-                    dbService.saveTranslate(input, result, targetLanguage);
+                    dbService.saveTranslate(input, result, to);
                 }
                 bundle.putString(MessageKey.KEY.toString(), MessageKey.TRANSLATE_IS_READY.toString());
                 bundle.putString(MessageKey.TRANSLATE_RESULT.toString(), result);
@@ -106,7 +109,6 @@ public class Dictionary {
                 bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
                 bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.SqlError.toString());
             }
-
             msg.setData(bundle);
             bus.post(msg);
             return null;
