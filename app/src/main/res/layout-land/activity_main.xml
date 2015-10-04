@@ -83,6 +83,10 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine"
             android:ems="13"
+            android:focusable="false"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:longClickable="false"
             android:layout_marginTop="30dp"
             android:layout_weight="2"/>
 
