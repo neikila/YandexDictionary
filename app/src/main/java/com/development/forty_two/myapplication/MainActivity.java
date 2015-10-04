@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         final EditText input = (EditText) findViewById(R.id.editTextInput);
         final EditText output = (EditText) findViewById(R.id.editTextOutput);
 
+
         final Switch separately = (Switch) findViewById(R.id.switchTranslateWords);
 
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
