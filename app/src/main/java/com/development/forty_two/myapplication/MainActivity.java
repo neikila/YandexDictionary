@@ -152,10 +152,14 @@ public class MainActivity extends AppCompatActivity {
                                     errorMessage = "Sorry. There is a error in application please reload application." +
                                             "If it hasn't solved your problem, please, reinstall application.";
                                     break;
+                                case TranslationError:
+                                    errorMessage = "Sorry. There is a error in application please reload application." +
+                                            "If it hasn't solved your problem, please, reinstall application.";
+                                    break;
                                 default:
                                     errorMessage = "Nice day, don't you think so?";
                             }
-                            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 }
 
