@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
@@ -18,7 +19,7 @@
             android:layout_weight="1"
             android:layout_gravity="center_vertical"/>
 
-         <!--TODO what is contentDescription -->
+        <!--TODO what is contentDescription -->
         <ImageButton
             android:id="@+id/rotateButton"
             android:layout_width="40dp"
@@ -79,27 +80,5 @@
             android:text="@string/main_translate_button"
             android:layout_weight="2"/>
     </LinearLayout>
-
-    <!--<RelativeLayout-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_below="@id/editTextOutput"-->
-        <!--android:layout_marginTop="20dp">-->
-
-        <!--<Switch-->
-            <!--android:id="@+id/switchTranslateWords"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/main_switch_translate_separately" />-->
-
-        <!--<Button-->
-            <!--android:id="@+id/button"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/main_translate_button" />-->
-
-    <!--</RelativeLayout>-->
 
 </RelativeLayout>
