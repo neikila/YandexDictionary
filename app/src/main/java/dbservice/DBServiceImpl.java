@@ -40,16 +40,14 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         saveTranslate("hello", "Привет", "ru");
 
         TableUtils.clearTable(getConnectionSource(), RouteDataSet.class);
-        ArrayList <RouteDataSet> temp = new ArrayList<>();
-        temp.add(new RouteDataSet("tl", "ca"));
-        temp.add(new RouteDataSet("tl", "ru"));
-        temp.add(new RouteDataSet("ca", "tl"));
-        temp.add(new RouteDataSet("ca", "ru"));
-        temp.add(new RouteDataSet("ru", "ca"));
-        temp.add(new RouteDataSet("ru", "tl"));
-        temp.add(new RouteDataSet("ru", "en"));
-        temp.add(new RouteDataSet("en", "ru"));
-        routeDAO.saveRoutes(temp);
+        routeDAO.saveRoute(new RouteDataSet("tl", "ca"));
+        routeDAO.saveRoute(new RouteDataSet("tl", "ru"));
+        routeDAO.saveRoute(new RouteDataSet("ca", "tl"));
+        routeDAO.saveRoute(new RouteDataSet("ca", "ru"));
+        routeDAO.saveRoute(new RouteDataSet("ru", "ca"));
+        routeDAO.saveRoute(new RouteDataSet("ru", "tl"));
+        routeDAO.saveRoute(new RouteDataSet("ru", "en"));
+        routeDAO.saveRoute(new RouteDataSet("en", "ru"));
     }
 
     private void presetLanguages() throws SQLException {
@@ -159,8 +157,17 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
     }
 
     @Override
-    public void saveRoutes(ArrayList<RouteDataSet> routes) throws SQLException {
-        routeDAO.saveRoutes(routes);
+    public void saveRoutes(ArrayList<String> routes) throws SQLException {
+        for (String route: routes) {
+            String from = route.substring(0,2);
+            String to = route.substring(3,5);
+            RouteDataSet temp = new RouteDataSet(from, to);
+            if (languageDAO.isLanguageExist(from) &&
+                    languageDAO.isLanguageExist(to) &&
+                    !routeDAO.isExist(temp)) {
+                routeDAO.saveRoute(temp);
+            }
+        }
     }
 
     @Override

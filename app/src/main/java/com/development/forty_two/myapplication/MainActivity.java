@@ -56,16 +56,7 @@ public class MainActivity extends AppCompatActivity {
         from.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList<String> toLangs = dictionary.getToLangPairedWithGivenLang((String) from.getSelectedItem());
-                ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
-                String currentLang = (String) to.getSelectedItem();
-                temp.clear();
-                temp.addAll(toLangs);
-                if (toLangs.contains(currentLang)) {
-                    to.setSelection(temp.getPosition(currentLang));
-                } else {
-                    to.setSelection(0);
-                }
+                updateRoute(from, to);
             }
 
             @Override
@@ -73,12 +64,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter <String> adapter1 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
+        ArrayAdapter <String> adapter1 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down,
                 R.id.language, dictionary.getLanguages());
         from.setAdapter(adapter1);
         from.setSelection(0);
 
-        ArrayAdapter <String> adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
+        ArrayAdapter <String> adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down,
                 R.id.language, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
         to.setAdapter(adapter2);
         to.setSelection(0);
@@ -129,11 +120,26 @@ public class MainActivity extends AppCompatActivity {
                         case TRANSLATE_IS_READY:
                             output.setText(bundle.getString(MessageKey.TRANSLATE_RESULT.toString()));
                             break;
+                        case UPDATE_ROUTES:
+                            updateRoute(from, to);
                     }
                 }
 
             }
         };
+    }
+
+    private void updateRoute(Spinner from, Spinner to) {
+        ArrayList<String> toLangs = dictionary.getToLangPairedWithGivenLang((String) from.getSelectedItem());
+        ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
+        String currentLang = (String) to.getSelectedItem();
+        temp.clear();
+        temp.addAll(toLangs);
+        if (toLangs.contains(currentLang)) {
+            to.setSelection(temp.getPosition(currentLang));
+        } else {
+            to.setSelection(0);
+        }
     }
 
     @Override

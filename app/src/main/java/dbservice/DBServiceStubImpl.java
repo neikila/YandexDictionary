@@ -49,7 +49,7 @@ public class DBServiceStubImpl implements DBService {
     }
 
     @Override
-    public void saveRoutes(ArrayList<RouteDataSet> routes) {
+    public void saveRoutes(ArrayList<String> routes) {
     }
 
     @Override

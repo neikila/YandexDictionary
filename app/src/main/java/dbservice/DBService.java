@@ -18,7 +18,7 @@ public interface DBService {
 
     String getReduced(String language) throws SQLException;
 
-    void saveRoutes(ArrayList<RouteDataSet> routes) throws SQLException;
+    void saveRoutes(ArrayList<String> routes) throws SQLException;
 
     ArrayList<String> getToLangPairedWithGivenLang(String language) throws SQLException;
 

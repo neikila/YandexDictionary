@@ -18,5 +18,4 @@
         android:layout_below="@id/searchWord"
         android:layout_marginTop="10dp" />
 
-
 </RelativeLayout>

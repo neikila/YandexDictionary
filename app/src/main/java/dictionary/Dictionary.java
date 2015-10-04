@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ import yandex.YandexCommunicator;
 import yandex.YandexCommunicatorImpl;
 import yandex.YandexCommunicatorStubImpl;
 import utils.ErrorTypes;
+import yandex.YandexResponseLanguage;
 
 /**
  * Created by neikila on 25.09.15.
@@ -61,7 +63,16 @@ public class Dictionary {
     }
 
     public void setBus(Bus bus) {
-        this.bus = bus;
+        if (this.bus == null) {
+            this.bus = bus;
+            bus.register(this);
+            new GetDirectionsAsyncTask().execute();
+        }
+    }
+
+    @Subscribe
+    public void react(YandexResponseLanguage responseLanguage) {
+        ArrayList <String> temp = responseLanguage.getArray();
     }
 
     private String reduce(String input) {
@@ -111,6 +122,33 @@ public class Dictionary {
             }
             msg.setData(bundle);
             bus.post(msg);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+        }
+    }
+
+    public class GetDirectionsAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                try {
+                    dbService.saveRoutes(communicator.getDirLanguages().getArray());
+                    Message msg = new Message();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(MessageKey.KEY.toString(), MessageKey.UPDATE_ROUTES.toString());
+                    msg.setData(bundle);
+                    bus.post(msg);
+                } catch (SQLException e) {
+                    // TODO обработка ошибки
+                }
+            } catch (IOException e) {
+                // TODO обработка ошибок
+            }
             return null;
         }
 
