@@ -8,5 +8,6 @@ public enum MessageKey {
     TRANSLATE_IS_READY,
     TRANSLATE_RESULT,
     ERROR,
-    ERROR_TYPE;
+    ERROR_TYPE,
+    UPDATE_ROUTES;
 }

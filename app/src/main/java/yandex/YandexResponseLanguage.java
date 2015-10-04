@@ -1,5 +1,7 @@
 package yandex;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 /**
@@ -7,13 +9,8 @@ import java.util.ArrayList;
  */
 public class YandexResponseLanguage {
     private ArrayList<String> dirs;
-    private ArrayList<Dir> dirObjects;
     public YandexResponseLanguage(ArrayList<String> dirs){
         this.dirs = dirs;
-        dirObjects = new ArrayList<Dir>();
-        for (String dir: this.dirs) {
-            dirObjects.add(new Dir(dir));
-        }
     }
 
     public ArrayList getArray(){

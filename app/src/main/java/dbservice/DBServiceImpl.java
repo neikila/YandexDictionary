@@ -9,6 +9,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import dbservice.dao.DictionaryDAO;
 import dbservice.dao.LanguageDAO;
@@ -34,22 +35,6 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         setDictionaryDAO();
         setRoutesDAO();
         setLanguagesDAO();
-
-        // TODO для тестов
-        clearDictionary();
-        saveTranslate("hello", "Привет", "ru");
-
-        TableUtils.clearTable(getConnectionSource(), RouteDataSet.class);
-        ArrayList <RouteDataSet> temp = new ArrayList<>();
-        temp.add(new RouteDataSet("tl", "ca"));
-        temp.add(new RouteDataSet("tl", "ru"));
-        temp.add(new RouteDataSet("ca", "tl"));
-        temp.add(new RouteDataSet("ca", "ru"));
-        temp.add(new RouteDataSet("ru", "ca"));
-        temp.add(new RouteDataSet("ru", "tl"));
-        temp.add(new RouteDataSet("ru", "en"));
-        temp.add(new RouteDataSet("en", "ru"));
-        routeDAO.saveRoutes(temp);
     }
 
     private void presetLanguages() throws SQLException {
@@ -69,16 +54,15 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         languageDAO.saveLanguage("cy", "Валлийский");
         languageDAO.saveLanguage("vi", "Вьетнамский");
         languageDAO.saveLanguage("hu", "Венгерский");
-        languageDAO.saveLanguage("ht", "Гаитянский");
-        languageDAO.saveLanguage("id", "Индонезийский");
         languageDAO.saveLanguage("mg", "Малагасийский");
-        languageDAO.saveLanguage("pt", "Португальский");
         languageDAO.saveLanguage("gl", "Галисийский");
+        languageDAO.saveLanguage("ht", "Гаитянский");
         languageDAO.saveLanguage("nl", "Голландский");
         languageDAO.saveLanguage("el", "Греческий");
         languageDAO.saveLanguage("ka", "Грузинский");
         languageDAO.saveLanguage("da", "Датский");
         languageDAO.saveLanguage("he", "Иврит");
+        languageDAO.saveLanguage("id", "Индонезийский");
         languageDAO.saveLanguage("ga", "Ирландский");
         languageDAO.saveLanguage("it", "Итальянский");
         languageDAO.saveLanguage("is", "Исландский");
@@ -99,6 +83,7 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         languageDAO.saveLanguage("no", "Норвежский");
         languageDAO.saveLanguage("fa", "Персидский");
         languageDAO.saveLanguage("pl", "Польский");
+        languageDAO.saveLanguage("pt", "Португальский");
         languageDAO.saveLanguage("ro", "Румынский");
         languageDAO.saveLanguage("ru", "Русский");
         languageDAO.saveLanguage("sr", "Сербский");
@@ -119,6 +104,12 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         languageDAO.saveLanguage("sv", "Шведский");
         languageDAO.saveLanguage("et", "Эстонский");
         languageDAO.saveLanguage("ja", "Японский");
+
+        if (routeDAO == null) {
+            setRoutesDAO();
+        }
+        routeDAO.saveRoute(new RouteDataSet("ru", "en"));
+        routeDAO.saveRoute(new RouteDataSet("en", "ru"));
     }
 
     @Override
@@ -159,8 +150,17 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
     }
 
     @Override
-    public void saveRoutes(ArrayList<RouteDataSet> routes) throws SQLException {
-        routeDAO.saveRoutes(routes);
+    public void saveRoutes(ArrayList<String> routes) throws SQLException {
+        for (String route: routes) {
+            String from = route.substring(0,2);
+            String to = route.substring(3,5);
+            RouteDataSet temp = new RouteDataSet(from, to);
+            if (languageDAO.isLanguageExist(from) &&
+                    languageDAO.isLanguageExist(to) &&
+                    !routeDAO.isExist(temp)) {
+                routeDAO.saveRoute(temp);
+            }
+        }
     }
 
     @Override
@@ -170,6 +170,7 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         for (RouteDataSet el: temp) {
             result.add(languageDAO.getFullName(el.getTo()));
         }
+        Collections.sort(result);
         return result;
     }
 

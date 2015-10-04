@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,8 +13,10 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -21,11 +24,18 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 
 import dictionary.Dictionary;
+import utils.ErrorTypes;
 import utils.MessageKey;
 
 public class MainActivity extends AppCompatActivity {
     private Dictionary dictionary;
     private Handler handler;
+
+    private static final String DEFAULT_LANG_FROM = "Английский";
+    private static final String DEFAULT_LANG_TO = "Русский";
+
+    private static final String FROM = "from";
+    private static final String TO = "to";
 
     @Subscribe
     public void react(Message msg) {
@@ -56,16 +66,9 @@ public class MainActivity extends AppCompatActivity {
         from.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList<String> toLangs = dictionary.getToLangPairedWithGivenLang((String) from.getSelectedItem());
-                ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
-                String currentLang = (String) to.getSelectedItem();
-                temp.clear();
-                temp.addAll(toLangs);
-                if (toLangs.contains(currentLang)) {
-                    to.setSelection(temp.getPosition(currentLang));
-                } else {
-                    to.setSelection(0);
-                }
+                String toLang = (String) to.getSelectedItem();
+                String fromLang = (String) from.getSelectedItem();
+                updateRoute(fromLang, toLang, to);
             }
 
             @Override
@@ -73,18 +76,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter <String> adapter1 = new ArrayAdapter<String>(this, R.layout.spinner_item,
+        ArrayAdapter <String> adapter1 = new ArrayAdapter<>(this, R.layout.spinner_item,
                 R.id.language, dictionary.getLanguages());
         adapter1.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         from.setAdapter(adapter1);
-        from.setSelection(0);
+        if (savedInstanceState != null && savedInstanceState.containsKey(FROM)) {
+            from.getSelectedItemPosition();
+            from.setSelection(savedInstanceState.getInt(FROM));
+        } else {
+            from.setSelection(adapter1.getPosition(DEFAULT_LANG_FROM));
+        }
 
-
-        ArrayAdapter <String> adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item,
+        ArrayAdapter <String> adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item,
                 R.id.language, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
         adapter2.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         to.setAdapter(adapter2);
-        to.setSelection(0);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(TO)) {
+            to.getSelectedItemPosition();
+            to.setSelection(savedInstanceState.getInt(TO));
+        } else {
+            from.setSelection(adapter2.getPosition(DEFAULT_LANG_TO));
+        }
 
         Button translate = (Button) findViewById(R.id.button_translate);
         translate.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +114,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // TODO тут может быть утечка памяти, но я не въехал пока откуда она тут (нужно пересмотреть лекцию)
+        ImageButton rotateButton = (ImageButton) findViewById(R.id.rotateButton);
+        rotateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String toLang = (String) from.getSelectedItem();
+                String fromLang = (String) to.getSelectedItem();
+                from.setSelection(((ArrayAdapter) from.getAdapter()).getPosition(fromLang));
+                updateRoute(fromLang, toLang,to);
+
+                Editable temp = input.getText();
+                input.setText(output.getText());
+                output.setText(temp);
+            }
+        });
+
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -112,11 +139,51 @@ public class MainActivity extends AppCompatActivity {
                         case TRANSLATE_IS_READY:
                             output.setText(bundle.getString(MessageKey.TRANSLATE_RESULT.toString()));
                             break;
+                        case UPDATE_ROUTES:
+                            String toLang = (String) to.getSelectedItem();
+                            String fromLang = (String) from.getSelectedItem();
+                            updateRoute(fromLang, toLang, to);
+                            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
+                            break;
+                        case ERROR:
+                            String errorMessage;
+                            switch (ErrorTypes.valueOf(bundle.getString(MessageKey.ERROR_TYPE.toString()))) {
+                                case SqlError:
+                                    errorMessage = "Sorry. There is a error in application please reload application." +
+                                            "If it hasn't solved your problem, please, reinstall application.";
+                                    break;
+                                default:
+                                    errorMessage = "Nice day, don't you think so?";
+                            }
+                            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
                     }
                 }
 
             }
         };
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
+        Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
+
+        outState.putInt("from", from.getSelectedItemPosition());
+        outState.putInt("to", to.getSelectedItemPosition());
+    }
+
+    private void updateRoute(String fromLang , String toLang, Spinner to) {
+        ArrayList<String> toLangs = dictionary.getToLangPairedWithGivenLang(fromLang);
+        ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
+        temp.clear();
+        temp.addAll(toLangs);
+        if (toLangs.contains(toLang)) {
+            to.setSelection(temp.getPosition(toLang));
+        } else {
+            to.setSelection(0);
+        }
     }
 
     @Override

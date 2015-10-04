@@ -6,21 +6,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/chooseLanguageBar"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <Spinner
-            android:id="@+id/spinnerInputLanguage"
-            android:spinnerMode="dialog"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"/>
-
-        <!--TODO what is contentDescription -->
         <ImageButton
             android:id="@+id/rotateButton"
             android:layout_width="40dp"
@@ -30,17 +20,31 @@
             android:background="@null"
             android:layout_marginRight="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_centerInParent="true"
             android:layout_gravity="center_vertical"/>
 
         <Spinner
-            android:id="@+id/spinnerOutputLanguage"
-            android:layout_width="fill_parent"
+            android:id="@+id/spinnerInputLanguage"
             android:spinnerMode="dialog"
+            android:layout_toLeftOf="@id/rotateButton"
+            android:layout_alignParentLeft="true"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center_vertical"/>
+        <!--android:layout_weight="1"-->
 
-    </LinearLayout>
+        <Spinner
+            android:id="@+id/spinnerOutputLanguage"
+            android:spinnerMode="dialog"
+            android:layout_toRightOf="@id/rotateButton"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"/>
+        <!--android:layout_weight="1"-->
+
+    </RelativeLayout>
+
 
     <EditText
         android:id="@+id/editTextInput"

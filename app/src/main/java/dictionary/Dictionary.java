@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -20,6 +21,7 @@ import yandex.YandexCommunicator;
 import yandex.YandexCommunicatorImpl;
 import yandex.YandexCommunicatorStubImpl;
 import utils.ErrorTypes;
+import yandex.YandexResponseLanguage;
 
 /**
  * Created by neikila on 25.09.15.
@@ -61,7 +63,16 @@ public class Dictionary {
     }
 
     public void setBus(Bus bus) {
-        this.bus = bus;
+        if (this.bus == null) {
+            this.bus = bus;
+            bus.register(this);
+            new GetDirectionsAsyncTask().execute();
+        }
+    }
+
+    @Subscribe
+    public void react(YandexResponseLanguage responseLanguage) {
+        ArrayList <String> temp = responseLanguage.getArray();
     }
 
     private String reduce(String input) {
@@ -78,7 +89,6 @@ public class Dictionary {
     }
 
     public class TranslateWordAsyncTask extends AsyncTask<String, Void, Void> {
-
         @Override
         protected Void doInBackground(String... params) {
             String input = params[0];
@@ -97,9 +107,9 @@ public class Dictionary {
                 if ((result = dbService.translate(input, from, to)) == null) {
                     try {
                         result = communicator.translate(from, to, input);
-                        // TODO analyse of result
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                        bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.TranslationError.toString());
                     }
                     dbService.saveTranslate(input, result, to);
                 }
@@ -113,10 +123,28 @@ public class Dictionary {
             bus.post(msg);
             return null;
         }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
     }
+
+    public class GetDirectionsAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            Message msg = new Message();
+            Bundle bundle = new Bundle();
+            try {
+                try {
+                    dbService.saveRoutes(communicator.getDirLanguages().getArray());
+                    bundle.putString(MessageKey.KEY.toString(), MessageKey.UPDATE_ROUTES.toString());
+                } catch (SQLException e) {
+                    bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                    bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.SqlError.toString());
+                }
+            } catch (IOException e) {
+                bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.TranslationError.toString());
+            }
+            msg.setData(bundle);
+            bus.post(msg);
+            return null;
+        }
+   }
 }
