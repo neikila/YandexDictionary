@@ -5,7 +5,7 @@
     <string name="action_settings">Settings</string>
     <string name="action_dictionary">Dictionary</string>
     <string name="action_menu">Main</string>
-
+    <string name="search_hint">Введите слово...</string>
     <string name="title_activity_dictionary">DictionaryActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
     <string name="yandex_subscribe">Переведено сервисом «Яндекс.Перевод</string>

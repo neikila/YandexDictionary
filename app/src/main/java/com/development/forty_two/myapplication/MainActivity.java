@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         from.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList <String> toLangs = dictionary.getToLangPairedWithGivenLang((String) from.getSelectedItem());
+                ArrayList<String> toLangs = dictionary.getToLangPairedWithGivenLang((String) from.getSelectedItem());
                 ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
                 String currentLang = (String) to.getSelectedItem();
                 temp.clear();
@@ -73,13 +73,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayAdapter <String> adapter1 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
+        ArrayAdapter <String> adapter1 = new ArrayAdapter<String>(this, R.layout.spinner_item,
                 R.id.language, dictionary.getLanguages());
+        adapter1.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         from.setAdapter(adapter1);
         from.setSelection(0);
 
-        ArrayAdapter <String> adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item_droppped_down,
+
+        ArrayAdapter <String> adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item,
                 R.id.language, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
+        adapter2.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         to.setAdapter(adapter2);
         to.setSelection(0);
 
