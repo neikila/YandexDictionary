@@ -31,7 +31,7 @@ public class Dictionary {
     private Bus bus;
 
     private Dictionary() {
-        communicator = new YandexCommunicatorStubImpl();
+        communicator = new YandexCommunicatorImpl();
         dbService = DBHelperFactory.getHelper();
 //        dbService = new DBServiceStubImpl();
 
