@@ -1,5 +1,6 @@
 package com.development.forty_two.myapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -25,13 +26,23 @@ public class DictionaryActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        this.closeOptionsMenu();
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        Intent i;
+        switch (id){
+            case R.id.menu_main:
+                i = new Intent(DictionaryActivity.this, MainActivity.class);
+                startActivity(i);
+                return true;
+            case R.id.menu_settings:
+                i = new Intent(DictionaryActivity.this, SettingsActivity.class);
+                startActivity(i);
+                return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        //noinspection SimplifiableIfStatement
+
+
+        return true;
     }
 }

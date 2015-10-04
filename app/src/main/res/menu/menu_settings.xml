@@ -2,6 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.development.forty_two.myapplication.SettingsActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_main"
+        android:title="@string/action_menu"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_dictionary"
+        android:title="@string/action_dictionary"
+        android:orderInCategory="100"
+        app:showAsAction="never" />
 </menu>
