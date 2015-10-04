@@ -28,7 +28,7 @@ public class LanguageDAO extends BaseDaoImpl<LanguageDataSet, Integer> {
     }
 
     public ArrayList<LanguageDataSet> getAllLangs() throws SQLException {
-        return (ArrayList<LanguageDataSet>)queryBuilder().query();
+        return (ArrayList<LanguageDataSet>)queryBuilder().orderBy(LanguageDataSet.LANGUAGE, true).query();
     }
 
     public void saveLanguage(String reduced, String language) throws SQLException{

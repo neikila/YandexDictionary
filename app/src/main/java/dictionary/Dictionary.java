@@ -89,7 +89,6 @@ public class Dictionary {
     }
 
     public class TranslateWordAsyncTask extends AsyncTask<String, Void, Void> {
-
         @Override
         protected Void doInBackground(String... params) {
             String input = params[0];
@@ -108,9 +107,9 @@ public class Dictionary {
                 if ((result = dbService.translate(input, from, to)) == null) {
                     try {
                         result = communicator.translate(from, to, input);
-                        // TODO analyse of result
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                        bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.TranslationError.toString());
                     }
                     dbService.saveTranslate(input, result, to);
                 }
@@ -124,37 +123,28 @@ public class Dictionary {
             bus.post(msg);
             return null;
         }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
     }
 
     public class GetDirectionsAsyncTask extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected Void doInBackground(Void... params) {
+            Message msg = new Message();
+            Bundle bundle = new Bundle();
             try {
                 try {
                     dbService.saveRoutes(communicator.getDirLanguages().getArray());
-                    Message msg = new Message();
-                    Bundle bundle = new Bundle();
                     bundle.putString(MessageKey.KEY.toString(), MessageKey.UPDATE_ROUTES.toString());
-                    msg.setData(bundle);
-                    bus.post(msg);
                 } catch (SQLException e) {
-                    // TODO обработка ошибки
+                    bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                    bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.SqlError.toString());
                 }
             } catch (IOException e) {
-                // TODO обработка ошибок
+                bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.TranslationError.toString());
             }
+            msg.setData(bundle);
+            bus.post(msg);
             return null;
         }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-    }
+   }
 }

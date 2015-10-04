@@ -9,6 +9,7 @@ import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import dbservice.dao.DictionaryDAO;
 import dbservice.dao.LanguageDAO;
@@ -169,6 +170,7 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         for (RouteDataSet el: temp) {
             result.add(languageDAO.getFullName(el.getTo()));
         }
+        Collections.sort(result);
         return result;
     }
 

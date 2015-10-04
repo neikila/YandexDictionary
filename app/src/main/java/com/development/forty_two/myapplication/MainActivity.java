@@ -23,11 +23,18 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 
 import dictionary.Dictionary;
+import utils.ErrorTypes;
 import utils.MessageKey;
 
 public class MainActivity extends AppCompatActivity {
     private Dictionary dictionary;
     private Handler handler;
+
+    private static final String DEFAULT_LANG_FROM = "Английский";
+    private static final String DEFAULT_LANG_TO = "Русский";
+
+    private static final String FROM = "from";
+    private static final String TO = "to";
 
     @Subscribe
     public void react(Message msg) {
@@ -72,22 +79,22 @@ public class MainActivity extends AppCompatActivity {
                 R.id.language, dictionary.getLanguages());
         from.setAdapter(adapter1);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey("from")) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(FROM)) {
             from.getSelectedItemPosition();
-            from.setSelection(savedInstanceState.getInt("from"));
+            from.setSelection(savedInstanceState.getInt(FROM));
         } else {
-            from.setSelection(0);
+            from.setSelection(adapter1.getPosition(DEFAULT_LANG_FROM));
         }
 
         ArrayAdapter <String> adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item_droppped_down,
                 R.id.language, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
         to.setAdapter(adapter2);
 
-        if (savedInstanceState != null && savedInstanceState.containsKey("to")) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(TO)) {
             to.getSelectedItemPosition();
-            to.setSelection(savedInstanceState.getInt("to"));
+            to.setSelection(savedInstanceState.getInt(TO));
         } else {
-            to.setSelection(0);
+            from.setSelection(adapter2.getPosition(DEFAULT_LANG_TO));
         }
 
         Button translate = (Button) findViewById(R.id.button_translate);
@@ -137,6 +144,17 @@ public class MainActivity extends AppCompatActivity {
                             updateRoute(fromLang, toLang, to);
                             Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
                             break;
+                        case ERROR:
+                            String errorMessage;
+                            switch (ErrorTypes.valueOf(bundle.getString(MessageKey.ERROR_TYPE.toString()))) {
+                                case SqlError:
+                                    errorMessage = "Sorry. There is a error in application please reload application." +
+                                            "If it hasn't solved your problem, please, reinstall application.";
+                                    break;
+                                default:
+                                    errorMessage = "Nice day, don't you think so?";
+                            }
+                            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
                     }
                 }
 
