@@ -24,8 +24,7 @@ public class LanguageDAO extends BaseDaoImpl<LanguageDataSet, Integer> {
     }
 
     public String getReduced(String lang) throws SQLException {
-        String temp = queryBuilder().where().eq(LanguageDataSet.LANGUAGE, lang).queryForFirst().getReduced();
-        return temp;
+        return queryBuilder().where().eq(LanguageDataSet.LANGUAGE, lang).queryForFirst().getReduced();
     }
 
     public ArrayList<LanguageDataSet> getAllLangs() throws SQLException {

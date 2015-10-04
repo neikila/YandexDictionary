@@ -87,7 +87,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!separately.isChecked()) {
-                    dictionary.translate(input.getText().toString(), (String) to.getSelectedItem());
+                    dictionary.translate(input.getText().toString(),
+                            (String) from.getSelectedItem(),
+                            (String) to.getSelectedItem()
+                    );
                 } else {
                     // TODO многострочный вывод
                 }

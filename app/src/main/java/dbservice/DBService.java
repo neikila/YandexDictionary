@@ -10,11 +10,13 @@ import dbservice.dataSets.RouteDataSet;
  */
 
 public interface DBService {
-    String translate(String input, String language) throws SQLException;
+    String translate(String input, String sourceLanguage, String targetLanguage) throws SQLException;
 
     void saveTranslate(String input, String result, String language) throws SQLException;
 
     void clearDictionary() throws SQLException;
+
+    String getReduced(String language) throws SQLException;
 
     void saveRoutes(ArrayList<RouteDataSet> routes) throws SQLException;
 

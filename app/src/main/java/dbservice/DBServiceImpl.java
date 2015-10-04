@@ -47,6 +47,7 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         temp.add(new RouteDataSet("ca", "ru"));
         temp.add(new RouteDataSet("ru", "ca"));
         temp.add(new RouteDataSet("ru", "tl"));
+        temp.add(new RouteDataSet("ru", "en"));
         temp.add(new RouteDataSet("en", "ru"));
         routeDAO.saveRoutes(temp);
     }
@@ -138,15 +139,13 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
     }
 
     @Override
-    public String translate(String input, String language) throws SQLException {
-        return dictionaryDAO.translate(input, languageDAO.getReduced(language));
+    public String translate(String input, String sourceLanguage, String lang) throws SQLException {
+        return dictionaryDAO.translate(input, lang);
     }
 
     @Override
-    public void saveTranslate(String input, String result, String language) throws SQLException {
-        dictionaryDAO.saveTranslate(
-                input, result, language.length() == 2 ? language: languageDAO.getReduced(language)
-        );
+    public void saveTranslate(String input, String result, String lang) throws SQLException {
+        dictionaryDAO.saveTranslate(input, result, lang);
     }
 
     @Override
@@ -155,13 +154,18 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
     }
 
     @Override
+    public String getReduced(String language) throws SQLException{
+        return languageDAO.getReduced(language);
+    }
+
+    @Override
     public void saveRoutes(ArrayList<RouteDataSet> routes) throws SQLException {
         routeDAO.saveRoutes(routes);
     }
 
     @Override
-    public ArrayList<String> getToLangPairedWithGivenLang(String language) throws SQLException {
-        ArrayList<RouteDataSet> temp = routeDAO.getToLangPairedWithFivenLang(languageDAO.getReduced(language));
+    public ArrayList<String> getToLangPairedWithGivenLang(String lang) throws SQLException {
+        ArrayList<RouteDataSet> temp = routeDAO.getToLangPairedWithFivenLang(lang);
         ArrayList <String> result = new ArrayList<>();
         for (RouteDataSet el: temp) {
             result.add(languageDAO.getFullName(el.getTo()));
