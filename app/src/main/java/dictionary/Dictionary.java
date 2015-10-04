@@ -70,18 +70,16 @@ public class Dictionary {
         }
     }
 
-    @Subscribe
-    public void react(YandexResponseLanguage responseLanguage) {
-        ArrayList <String> temp = responseLanguage.getArray();
-    }
-
-    private String reduce(String input) {
-        // TODO убрать из слов знаки препинания слева и справа. Хотя возможно это впринципе избыточно
-        return input;
+    public ArrayList<String> getTranslations(String query) {
+        try {
+            return dbService.getTranslations(query);
+        } catch (SQLException e) {
+            // TODO обработка ошибки
+        }
+        return new ArrayList<>();
     }
 
     public void translate(String input, String sourceLanguage, String targetLanguage) {
-        input = reduce(input);
         new TranslateWordAsyncTask().execute(input, sourceLanguage, targetLanguage);
     }
 

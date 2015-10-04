@@ -9,17 +9,35 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Spinner;
+
+import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
+import dictionary.Dictionary;
+
 public class DictionaryActivity extends AppCompatActivity {
+    private Dictionary dictionary;
+    private Bus bus;
+
+    private static final String SEARCH_FIELD = "searchField";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dictionary);
 
+        dictionary = Dictionary.getInstance();
+        bus = ((ApplicationModified)getApplication()).getBus();
+        bus.register(this);
+
         SearchView search = (SearchView) findViewById(R.id.searchWord);
+        if (savedInstanceState != null && savedInstanceState.containsKey(SEARCH_FIELD)) {
+            // TODO восстановление состояния SearchView
+//            search.setSubmitButtonEnabled(savedInstanceState.getInt(SEARCH_FIELD) == 1);
+//            search.setQuery("test", true);
+        }
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
             @Override
@@ -33,24 +51,25 @@ public class DictionaryActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        SearchView search = (SearchView) findViewById(R.id.searchWord);
+        outState.putInt(SEARCH_FIELD, search.isSubmitButtonEnabled()? 1: 0);
     }
 
     private void showResults(String query) {
         if(query.length() >= 3){
             //TODO выполнить запрос к базе за словами
-            ArrayList<String> words = new ArrayList<>();
-            words.add("Word 1");
-            words.add("Word 2");
+            ArrayList<String> words = dictionary.getTranslations(query);
             ListView list = (ListView) findViewById(R.id.listWords);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                     R.layout.list_item,words);
-
             list.setAdapter(adapter);
         }
-
-
     }
 
     @Override
@@ -84,5 +103,13 @@ public class DictionaryActivity extends AppCompatActivity {
 
 
         return true;
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Bus bus = ((ApplicationModified) getApplication()).getBus();
+        bus.unregister(this);
     }
 }

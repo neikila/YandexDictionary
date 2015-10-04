@@ -80,4 +80,12 @@ public class DBServiceStubImpl implements DBService {
         result.add("Русский");
         return result;
     }
+
+    @Override
+    public ArrayList<String> getTranslations(String query) throws SQLException {
+        ArrayList <String> result = new ArrayList<>();
+        result.add("Word 1");
+        result.add("Word 2");
+        return result;
+    }
 }

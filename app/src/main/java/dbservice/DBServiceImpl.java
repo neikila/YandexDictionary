@@ -184,6 +184,15 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         return result;
     }
 
+    @Override
+    public ArrayList<String> getTranslations(String query) throws SQLException {
+        ArrayList<String> result = new ArrayList<>();
+        for (DictionaryDataSet translation: dictionaryDAO.translate(query)) {
+            result.add(translation.getTranslate());
+        }
+        return result;
+    }
+
     private synchronized void setDictionaryDAO() throws SQLException {
         dictionaryDAO = new DictionaryDAO(getConnectionSource(), DictionaryDataSet.class);
     }

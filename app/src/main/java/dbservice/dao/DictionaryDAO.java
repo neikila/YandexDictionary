@@ -6,6 +6,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import dbservice.dataSets.DictionaryDataSet;
@@ -30,6 +31,15 @@ public class DictionaryDAO extends BaseDaoImpl<DictionaryDataSet, Integer> {
                 .queryForFirst();
         if (data != null) {
             return data.getTranslate();
+        } else {
+            return null;
+        }
+    }
+
+    public ArrayList<DictionaryDataSet> translate(String word) throws SQLException {
+        ArrayList<DictionaryDataSet> dataList = (ArrayList<DictionaryDataSet>)queryBuilder().where().eq("word", word).query();
+        if (dataList != null) {
+            return dataList;
         } else {
             return null;
         }

@@ -174,8 +174,8 @@ public class MainActivity extends AppCompatActivity {
         Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
 
-        outState.putInt("from", from.getSelectedItemPosition());
-        outState.putInt("to", to.getSelectedItemPosition());
+        outState.putInt(FROM, from.getSelectedItemPosition());
+        outState.putInt(TO, to.getSelectedItemPosition());
     }
 
     private void updateRoute(String fromLang , String toLang, Spinner to) {
