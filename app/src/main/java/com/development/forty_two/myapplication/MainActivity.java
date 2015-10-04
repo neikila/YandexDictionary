@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             to.getSelectedItemPosition();
             to.setSelection(savedInstanceState.getInt(TO));
         } else {
-            from.setSelection(adapter2.getPosition(DEFAULT_LANG_TO));
+            to.setSelection(adapter2.getPosition(DEFAULT_LANG_TO));
         }
 
         Button translate = (Button) findViewById(R.id.button_translate);
@@ -163,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
         };
     }
