@@ -8,7 +8,7 @@
     <string name="search_hint">Введите слово...</string>
     <string name="title_activity_dictionary">DictionaryActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
-    <string name="yandex_subscribe">Переведено сервисом «Яндекс.Перевод</string>
+    <string name="yandex_subscribe">Переведено сервисом "Яндекс.Перевод"</string>
     <string name="yandex_translate_link">www.translate.yandex.ru</string>
     <string name="team_name">42 development</string>
     <string name="settings_title_dictionary">Настройки словаря:</string>
@@ -19,4 +19,5 @@
     <string name="main_switch_translate_separately">По словам</string>
     <string name="main_reverse_translate_direction_button_description">Reverse direction</string>
     <string name="main_translate_button">Перевести</string>
+    <string name="main_hint_input">Слово для перевода</string>
 </resources>

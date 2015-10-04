@@ -51,6 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
+        android:hint="@string/main_hint_input"
         android:ems="10"
         android:layout_below="@id/chooseLanguageBar"
         android:layout_marginTop="10dp"/>
