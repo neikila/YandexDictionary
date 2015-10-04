@@ -19,8 +19,7 @@ public class YandexCommunicatorStubImpl implements YandexCommunicator {
     public String translate(String inLang, String outLang,String input) { return "Test value";}
 
     @Override
-    public Vector<String> translateSeparately(String inputLanguage, String outLanguage, String text) {
-        return result;
+    public YandexResponseLanguage getDirLanguages(){
+        return null;
     }
-
 }

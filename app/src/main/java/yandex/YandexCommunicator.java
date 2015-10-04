@@ -1,6 +1,7 @@
 package yandex;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Vector;
 
 /**
@@ -10,5 +11,5 @@ public interface YandexCommunicator {
     // TODO тут еще придется разобраться ибо асинхроненько нужно это сделать (см лекция
     String translate(String inputLanguage, String outLanguage, String text) throws IOException;
 
-    Vector<String> translateSeparately(String inputLanguage, String outLanguage, String text);
+    YandexResponseLanguage getDirLanguages() throws IOException;
 }

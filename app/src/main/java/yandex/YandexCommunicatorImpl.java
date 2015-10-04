@@ -34,15 +34,16 @@ public class YandexCommunicatorImpl implements YandexCommunicator {
 
         String lang = inLang+"-"+outLang;
         YandexResponseTranslated tmp = service.translate(YANDEX_KEY,input,lang);
+
         return tmp.getText();
-        //TODO Для проверки выводил полученный список направлений
-        /*YandexResponseLanguage tmp = service.langList(YANDEX_KEY);
-
-        return Arrays.toString(tmp.getArray().toArray());*/
     }
-    @Override
-    public Vector<String> translateSeparately(String inputLanguage, String outLanguage, String text) {
 
-        return result;
-    };
+    @Override
+    public YandexResponseLanguage getDirLanguages(){
+
+        YandexResponseLanguage dirs = service.langList(YANDEX_KEY);
+
+        return dirs;
+    }
+
 }
