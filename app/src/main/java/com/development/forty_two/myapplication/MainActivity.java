@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         from.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayList <String> toLangs = dictionary.getToLangPairedWithGivenLang((String) from.getSelectedItem());
+                ArrayList<String> toLangs = dictionary.getToLangPairedWithGivenLang((String) from.getSelectedItem());
                 ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
                 String currentLang = (String) to.getSelectedItem();
                 temp.clear();
@@ -93,6 +94,26 @@ public class MainActivity extends AppCompatActivity {
                     );
                 } else {
                     // TODO многострочный вывод
+                }
+            }
+        });
+
+        ImageButton rotateButton = (ImageButton) findViewById(R.id.rotateButton);
+        rotateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String sourceLang = (String) from.getSelectedItem();
+                String currentLang = (String) to.getSelectedItem();
+                from.setSelection(((ArrayAdapter) from.getAdapter()).getPosition(currentLang));
+
+                ArrayList<String> toLangs = dictionary.getToLangPairedWithGivenLang(currentLang);
+                ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
+                temp.clear();
+                temp.addAll(toLangs);
+                if (toLangs.contains(sourceLang)) {
+                    to.setSelection(temp.getPosition(sourceLang));
+                } else {
+                    to.setSelection(0);
                 }
             }
         });
