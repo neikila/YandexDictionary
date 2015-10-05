@@ -98,10 +98,7 @@ public class DictionaryActivity extends AppCompatActivity {
                 startActivity(i);
                 return true;
         }
-
         //noinspection SimplifiableIfStatement
-
-
         return true;
     }
 

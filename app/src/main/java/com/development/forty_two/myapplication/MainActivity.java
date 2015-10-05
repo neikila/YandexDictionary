@@ -168,6 +168,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        Bus bus = ((ApplicationModified) getApplication()).getBus();
+        bus.register(this);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -196,7 +203,6 @@ public class MainActivity extends AppCompatActivity {
         Bus bus = ((ApplicationModified) getApplication()).getBus();
         bus.unregister(this);
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
