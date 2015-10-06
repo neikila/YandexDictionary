@@ -6,6 +6,8 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.otto.Bus;
@@ -58,7 +61,18 @@ public class MainActivity extends AppCompatActivity {
         final EditText input = (EditText) findViewById(R.id.editTextInput);
         final EditText output = (EditText) findViewById(R.id.editTextOutput);
 
+        input.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                output.setText("");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
         final Switch separately = (Switch) findViewById(R.id.switchTranslateWords);
 
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
