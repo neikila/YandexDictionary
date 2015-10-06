@@ -29,8 +29,6 @@ public class DictionaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_dictionary);
 
         dictionary = Dictionary.getInstance();
-        bus = ((ApplicationModified)getApplication()).getBus();
-        bus.register(this);
 
         SearchView search = (SearchView) findViewById(R.id.searchWord);
         if (savedInstanceState != null && savedInstanceState.containsKey(SEARCH_FIELD)) {
@@ -58,6 +56,13 @@ public class DictionaryActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         SearchView search = (SearchView) findViewById(R.id.searchWord);
         outState.putInt(SEARCH_FIELD, search.isSubmitButtonEnabled()? 1: 0);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        bus = ((ApplicationModified)getApplication()).getBus();
+        bus.register(this);
     }
 
     private void showResults(String query) {

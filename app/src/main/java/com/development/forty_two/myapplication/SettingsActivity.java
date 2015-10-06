@@ -40,9 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
                 startActivity(i);
                 return true;
         }
-
         //noinspection SimplifiableIfStatement
-
         return true;
     }
 }
