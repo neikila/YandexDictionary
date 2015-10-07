@@ -36,7 +36,7 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         setDictionaryDAO();
         setRoutesDAO();
         setLanguagesDAO();
-        dictionaryDAO.getAll();
+//        dictionaryDAO.getAll();
     }
 
     private void presetLanguages() throws SQLException {
