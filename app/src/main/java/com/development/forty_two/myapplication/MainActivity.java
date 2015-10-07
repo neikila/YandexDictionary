@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String FROM = "from";
     private static final String TO = "to";
 
+    private Boolean isSwapping;
+
     @Subscribe
     public void react(Message msg) {
         handler.sendMessage(msg);
@@ -56,14 +58,45 @@ public class MainActivity extends AppCompatActivity {
 
         Bus bus = ((ApplicationModified) getApplication()).getBus();
         bus.register(this);
-        dictionary.setBus(bus);
+//        dictionary.setBus(bus);
 
         final EditText input = (EditText) findViewById(R.id.editTextInput);
         final EditText output = (EditText) findViewById(R.id.editTextOutput);
 
+        final Switch separately = (Switch) findViewById(R.id.switchTranslateWords);
+
+        final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
+        final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
+
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle bundle = msg.getData();
+                String key = bundle.getString(MessageKey.KEY.toString());
+                if (key != null) {
+                    switch (MessageKey.valueOf(key)) {
+                        case TRANSLATE_IS_READY:
+                            output.setText(bundle.getString(MessageKey.TRANSLATE_RESULT.toString()));
+                            break;
+                        case UPDATE_ROUTES:
+                            String toLang = (String) to.getSelectedItem();
+                            String fromLang = (String) from.getSelectedItem();
+                            updateRoute(fromLang, toLang, to);
+                            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
+                            break;
+                        case ERROR:
+                            reflectOnError(ErrorTypes.valueOf(bundle.getString(MessageKey.ERROR_TYPE.toString())));
+                    }
+                }
+            }
+        };
+        dictionary.updateRoutes();
+
+        /* Set ersing output */
         input.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -71,48 +104,51 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         });
-        final Switch separately = (Switch) findViewById(R.id.switchTranslateWords);
 
-        final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
-        final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
+        /* Setting data for spinners */
+        ArrayAdapter <String> adapterFrom = new ArrayAdapter<>(this, R.layout.spinner_item,
+                R.id.language, dictionary.getLanguages());
+        adapterFrom.setDropDownViewResource(R.layout.spinner_item_droppped_down);
+        from.setAdapter(adapterFrom);
+        if (savedInstanceState != null && savedInstanceState.containsKey(FROM)) {
+            from.getSelectedItemPosition();
+            from.setSelection(savedInstanceState.getInt(FROM));
+        } else {
+            from.setSelection(adapterFrom.getPosition(DEFAULT_LANG_FROM));
+        }
 
+        ArrayAdapter <String> adapterTo = new ArrayAdapter<>(this, R.layout.spinner_item,
+                R.id.language, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
+        adapterTo.setDropDownViewResource(R.layout.spinner_item_droppped_down);
+        to.setAdapter(adapterTo);
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(TO)) {
+            to.getSelectedItemPosition();
+            to.setSelection(savedInstanceState.getInt(TO));
+        } else {
+            to.setSelection(adapterTo.getPosition(DEFAULT_LANG_TO));
+        }
+
+
+        /* Change from language */
         from.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String toLang = (String) to.getSelectedItem();
                 String fromLang = (String) from.getSelectedItem();
                 updateRoute(fromLang, toLang, to);
+
+                input.setText("");
+                output.setText("");
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        ArrayAdapter <String> adapter1 = new ArrayAdapter<>(this, R.layout.spinner_item,
-                R.id.language, dictionary.getLanguages());
-        adapter1.setDropDownViewResource(R.layout.spinner_item_droppped_down);
-        from.setAdapter(adapter1);
-        if (savedInstanceState != null && savedInstanceState.containsKey(FROM)) {
-            from.getSelectedItemPosition();
-            from.setSelection(savedInstanceState.getInt(FROM));
-        } else {
-            from.setSelection(adapter1.getPosition(DEFAULT_LANG_FROM));
-        }
-
-        ArrayAdapter <String> adapter2 = new ArrayAdapter<>(this, R.layout.spinner_item,
-                R.id.language, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
-        adapter2.setDropDownViewResource(R.layout.spinner_item_droppped_down);
-        to.setAdapter(adapter2);
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(TO)) {
-            to.getSelectedItemPosition();
-            to.setSelection(savedInstanceState.getInt(TO));
-        } else {
-            to.setSelection(adapter2.getPosition(DEFAULT_LANG_TO));
-        }
 
         Button translate = (Button) findViewById(R.id.button_translate);
         translate.setOnClickListener(new View.OnClickListener() {
@@ -136,49 +172,36 @@ public class MainActivity extends AppCompatActivity {
                 String toLang = (String) from.getSelectedItem();
                 String fromLang = (String) to.getSelectedItem();
                 from.setSelection(((ArrayAdapter) from.getAdapter()).getPosition(fromLang));
-                updateRoute(fromLang, toLang,to);
+                updateRoute(fromLang, toLang, to);
 
                 Editable temp = input.getText();
                 input.setText(output.getText());
                 output.setText(temp);
             }
         });
+    }
 
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                String key = bundle.getString(MessageKey.KEY.toString());
-                if (key != null) {
-                    switch (MessageKey.valueOf(key)) {
-                        case TRANSLATE_IS_READY:
-                            output.setText(bundle.getString(MessageKey.TRANSLATE_RESULT.toString()));
-                            break;
-                        case UPDATE_ROUTES:
-                            String toLang = (String) to.getSelectedItem();
-                            String fromLang = (String) from.getSelectedItem();
-                            updateRoute(fromLang, toLang, to);
-                            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
-                            break;
-                        case ERROR:
-                            String errorMessage;
-                            switch (ErrorTypes.valueOf(bundle.getString(MessageKey.ERROR_TYPE.toString()))) {
-                                case SqlError:
-                                    errorMessage = "Sorry. There is a error in application please reload application." +
-                                            "If it hasn't solved your problem, please, reinstall application.";
-                                    break;
-                                case TranslationError:
-                                    errorMessage = "Sorry. There is a error in application please reload application." +
-                                            "If it hasn't solved your problem, please, reinstall application.";
-                                    break;
-                                default:
-                                    errorMessage = "Nice day, don't you think so?";
-                            }
-                            Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-        };
+    private void reflectOnError(ErrorTypes type) {
+        String errorMessage;
+        switch (type) {
+            case SqlError:
+                errorMessage = "Sorry. There is a error in application please reload application." +
+                        "If it hasn't solved your problem, please, reinstall application.";
+                break;
+            case TranslationError:
+                errorMessage = "Sorry. There is a error in application please reload application." +
+                        "If it hasn't solved your problem, please, reinstall application.";
+                break;
+            case NoInternetCantUpdateRoutes:
+                errorMessage = "No Internet connection. Can't update routes.";
+                break;
+            case NoInternet:
+                errorMessage = "Word is not in database and there is no Internet connection";
+                break;
+            default:
+                errorMessage = "Nice day, don't you think so?";
+        }
+        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
     }
 
     @Override

@@ -16,6 +16,7 @@ import java.util.Map;
 import dbservice.DBHelperFactory;
 import dbservice.DBService;
 import dbservice.DBServiceStubImpl;
+import retrofit.RetrofitError;
 import utils.MessageKey;
 import yandex.YandexCommunicator;
 import yandex.YandexCommunicatorImpl;
@@ -35,6 +36,11 @@ public class Dictionary {
     private Dictionary() {
         communicator = new YandexCommunicatorImpl();
         dbService = DBHelperFactory.getHelper();
+//        try {
+//            dbService.clearDictionary();
+//        } catch (SQLException e) {
+//            // Testing
+//        }
     }
 
     public static Dictionary getInstance() {
@@ -42,6 +48,10 @@ public class Dictionary {
             dictionary = new Dictionary();
         }
         return dictionary;
+    }
+
+    public void updateRoutes() {
+        new GetDirectionsAsyncTask().execute();
     }
 
     public ArrayList<String> getLanguages() {
@@ -65,8 +75,6 @@ public class Dictionary {
     public void setBus(Bus bus) {
         if (this.bus == null) {
             this.bus = bus;
-            bus.register(this);
-            new GetDirectionsAsyncTask().execute();
         }
     }
 
@@ -97,25 +105,29 @@ public class Dictionary {
             Message msg = new Message();
             Bundle bundle = new Bundle();
 
-
             try {
                 String from = dbService.getReduced(sourceLanguage);
                 String to = dbService.getReduced(targetLanguage);
 
                 if ((result = dbService.translate(input, from, to)) == null) {
-                    try {
                         result = communicator.translate(from, to, input);
-                    } catch (IOException e) {
-                        bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
-                        bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.TranslationError.toString());
-                    }
+
                     dbService.saveTranslate(input, result, to);
                 }
                 bundle.putString(MessageKey.KEY.toString(), MessageKey.TRANSLATE_IS_READY.toString());
                 bundle.putString(MessageKey.TRANSLATE_RESULT.toString(), result);
-            } catch (SQLException e) {
+            }
+            catch (IOException e) {
+                bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.TranslationError.toString());
+            }
+            catch (SQLException e) {
                 bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
                 bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.SqlError.toString());
+            }
+            catch (RetrofitError e) {
+                bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.NoInternet.toString());
             }
             msg.setData(bundle);
             bus.post(msg);
@@ -129,14 +141,18 @@ public class Dictionary {
             Message msg = new Message();
             Bundle bundle = new Bundle();
             try {
-                try {
-                    dbService.saveRoutes(communicator.getDirLanguages().getArray());
-                    bundle.putString(MessageKey.KEY.toString(), MessageKey.UPDATE_ROUTES.toString());
-                } catch (SQLException e) {
-                    bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
-                    bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.SqlError.toString());
-                }
-            } catch (IOException e) {
+                dbService.saveRoutes(communicator.getDirLanguages().getArray());
+                bundle.putString(MessageKey.KEY.toString(), MessageKey.UPDATE_ROUTES.toString());
+            }
+            catch (SQLException e) {
+                bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.SqlError.toString());
+            }
+            catch (RetrofitError e) {
+                bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
+                bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.NoInternetCantUpdateRoutes.toString());
+            }
+            catch (IOException e) {
                 bundle.putString(MessageKey.KEY.toString(), MessageKey.ERROR.toString());
                 bundle.putString(MessageKey.ERROR_TYPE.toString(), ErrorTypes.TranslationError.toString());
             }

@@ -17,6 +17,7 @@ import dbservice.dao.RouteDAO;
 import dbservice.dataSets.DictionaryDataSet;
 import dbservice.dataSets.LanguageDataSet;
 import dbservice.dataSets.RouteDataSet;
+import dictionary.Dictionary;
 
 /**
  * Created by ivan on 30.09.15.
@@ -35,6 +36,7 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
         setDictionaryDAO();
         setRoutesDAO();
         setLanguagesDAO();
+        dictionaryDAO.getAll();
     }
 
     private void presetLanguages() throws SQLException {

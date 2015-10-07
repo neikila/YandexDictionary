@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dbservice.dataSets.DictionaryDataSet;
+import dbservice.dataSets.LanguageDataSet;
 import dictionary.Dictionary;
 
 /**
@@ -20,6 +21,11 @@ public class DictionaryDAO extends BaseDaoImpl<DictionaryDataSet, Integer> {
     public DictionaryDAO(ConnectionSource connectionSource,
                          Class<DictionaryDataSet> dataClass) throws SQLException {
         super(connectionSource, dataClass);
+    }
+
+    public void getAll() throws SQLException {
+        List<DictionaryDataSet> result = queryBuilder().query();
+        return;
     }
 
     public String translate(String word, String language) throws SQLException {

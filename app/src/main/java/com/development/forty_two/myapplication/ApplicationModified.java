@@ -6,6 +6,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
 import dbservice.DBHelperFactory;
+import dictionary.Dictionary;
 
 /**
  * Created by neikila on 29.09.15.
@@ -15,18 +16,15 @@ public class ApplicationModified extends Application {
 
     @Override
     public void onCreate() {
-        super.onCreate();
-        bus = new Bus(ThreadEnforcer.ANY);
-
-        // TODO отвратительная зависимость базы от контекста, можно ли от неё избавиться?
         DBHelperFactory.setHelper(getApplicationContext());
+        bus = new Bus(ThreadEnforcer.ANY);
+        Dictionary.getInstance().setBus(bus);
+        super.onCreate();
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-
-        // TODO отвратительная зависимость базы от контекста, можно ли от неё избавиться?
         DBHelperFactory.releaseHelper();
     }
 

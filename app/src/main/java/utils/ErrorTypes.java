@@ -5,5 +5,7 @@ package utils;
  */
 public enum ErrorTypes {
     SqlError,
-    TranslationError;
+    TranslationError,
+    NoInternet,
+    NoInternetCantUpdateRoutes
 }
