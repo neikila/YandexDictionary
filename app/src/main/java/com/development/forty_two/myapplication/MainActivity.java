@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String FROM = "from";
     private static final String TO = "to";
 
+    private static final String LAST_INPUT_WORD = "LAST_IN_WORD";
+    private static final String LAST_OUTPUT_WORD = "LAST_OUT_WORD";
+
     private Boolean isSwapping;
 
     @Subscribe
@@ -68,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
 
+        /* Восстановление данных */
+        if (savedInstanceState != null) {
+            input.setText(savedInstanceState.getString(LAST_INPUT_WORD));
+            output.setText(savedInstanceState.getString(LAST_OUTPUT_WORD));
+        }
+
+        /* Установка хендлера сообщения */
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -141,8 +151,10 @@ public class MainActivity extends AppCompatActivity {
                 String fromLang = (String) from.getSelectedItem();
                 updateRoute(fromLang, toLang, to);
 
-                input.setText("");
-                output.setText("");
+                // TODO спросить про то как тут очищать
+
+//                input.setText("");
+//                output.setText("");
             }
 
             @Override
@@ -217,9 +229,14 @@ public class MainActivity extends AppCompatActivity {
 
         Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
-
         outState.putInt(FROM, from.getSelectedItemPosition());
         outState.putInt(TO, to.getSelectedItemPosition());
+
+
+        EditText in = (EditText) findViewById(R.id.editTextInput);
+        EditText out = (EditText) findViewById(R.id.editTextOutput);
+        outState.putString(LAST_INPUT_WORD, in.getText().toString());
+        outState.putString(LAST_OUTPUT_WORD, out.getText().toString());
     }
 
     private void updateRoute(String fromLang , String toLang, Spinner to) {

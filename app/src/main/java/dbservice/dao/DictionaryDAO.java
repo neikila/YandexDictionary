@@ -25,6 +25,7 @@ public class DictionaryDAO extends BaseDaoImpl<DictionaryDataSet, Integer> {
 
     public void getAll() throws SQLException {
         List<DictionaryDataSet> result = queryBuilder().query();
+        // Todo delete it
         return;
     }
 
