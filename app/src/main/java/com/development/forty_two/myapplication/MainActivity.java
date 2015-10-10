@@ -1,6 +1,8 @@
 package com.development.forty_two.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -53,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
 
+        SharedPreferences mSettings = getSharedPreferences(SettingsActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        from.setEnabled(!mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false));  // TODO внешне обозначить что спиннер и кнопка не активны
+        separately.setEnabled(!mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false));
+
         from.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -74,14 +80,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         ArrayAdapter <String> adapter1 = new ArrayAdapter<String>(this, R.layout.spinner_item,
-                R.id.language, dictionary.getLanguages());
+                R.id.ltem, dictionary.getLanguages());
         adapter1.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         from.setAdapter(adapter1);
         from.setSelection(0);
 
 
         ArrayAdapter <String> adapter2 = new ArrayAdapter<String>(this, R.layout.spinner_item,
-                R.id.language, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
+                R.id.ltem, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
         adapter2.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         to.setAdapter(adapter2);
         to.setSelection(0);

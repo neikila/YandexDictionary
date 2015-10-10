@@ -19,4 +19,5 @@
     <string name="main_switch_translate_separately">По словам</string>
     <string name="main_reverse_translate_direction_button_description">Reverse direction</string>
     <string name="main_translate_button">Перевести</string>
+    <string name="title_activity_history">HistoryActivity</string>
 </resources>
