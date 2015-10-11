@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         /* Setting data for spinners */
         ArrayAdapter <String> adapterFrom = new ArrayAdapter<>(this, R.layout.spinner_item,
-                R.id.language, dictionary.getLanguages());
+                R.id.ltem, dictionary.getLanguages());
         adapterFrom.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         from.setAdapter(adapterFrom);
         if (savedInstanceState != null && savedInstanceState.containsKey(FROM)) {
@@ -137,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ArrayAdapter <String> adapterTo = new ArrayAdapter<>(this, R.layout.spinner_item,
-                R.id.language, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
+                R.id.ltem, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
         adapterTo.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         to.setAdapter(adapterTo);
 
