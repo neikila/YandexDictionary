@@ -1,6 +1,7 @@
 package com.development.forty_two.myapplication;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import dbservice.Translate;
@@ -70,9 +72,7 @@ public class DictionaryActivity extends AppCompatActivity {
 
     private void showResults(String query) {
         if(query.length() >= 3){
-            ListView list = (ListView) findViewById(R.id.listWords);
-            ListItemTranslationAdapter adapter = new ListItemTranslationAdapter(dictionary.getTranslations(query));
-            list.setAdapter(adapter);
+            new GetTranslationAsyncTask().execute(query);
         }
     }
 
@@ -115,7 +115,7 @@ public class DictionaryActivity extends AppCompatActivity {
 
     private class ListItemTranslationAdapter extends ArrayAdapter<Translate> {
         public ListItemTranslationAdapter(List<Translate> objects) {
-            super(DictionaryActivity.this, 0,objects);
+            super(DictionaryActivity.this, 0, objects);
         }
 
         @Override
@@ -139,6 +139,27 @@ public class DictionaryActivity extends AppCompatActivity {
         private class ViewHolder {
             public TextView translate;
             public TextView lang;
+        }
+    }
+
+    private class GetTranslationAsyncTask extends AsyncTask <String, Void, Void> {
+        List <Translate> result;
+
+        @Override
+        protected Void doInBackground(String... params) {
+            result = dictionary.getTranslations(params[0]);
+            if (result == null) {
+                result = new ArrayList<>();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            ListItemTranslationAdapter adapter = new ListItemTranslationAdapter(result);
+            ListView list = (ListView) findViewById(R.id.listWords);
+            list.setAdapter(adapter);
         }
     }
 }
