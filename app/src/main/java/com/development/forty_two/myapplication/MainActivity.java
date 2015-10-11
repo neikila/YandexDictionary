@@ -159,8 +159,6 @@ public class MainActivity extends AppCompatActivity {
                 String fromLang = (String) from.getSelectedItem();
                 updateRoute(fromLang, toLang, to);
 
-                // TODO спросить про то как тут очищать
-
                 input.setText(setTextIfLangChangedInput);
                 output.setText(setTextIfLangChangedOutput);
                 setTextIfLangChangedInput = "";

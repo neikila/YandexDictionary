@@ -4,17 +4,25 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import dbservice.Translate;
+import dbservice.dataSets.DictionaryDataSet;
+import dbservice.dataSets.LanguageDataSet;
 import dictionary.Dictionary;
 
 public class DictionaryActivity extends AppCompatActivity {
@@ -67,12 +75,15 @@ public class DictionaryActivity extends AppCompatActivity {
 
     private void showResults(String query) {
         if(query.length() >= 3){
-            //TODO выполнить запрос к базе за словами
-            ArrayList<String> words = dictionary.getTranslations(query);
+//            ArrayList<String> words = dictionary.getTranslations(query);
             ListView list = (ListView) findViewById(R.id.listWords);
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                    R.layout.list_item,words);
+//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+//                    R.layout.list_item, words);
+//            ArrayList <DictionaryDataSet> re = new ArrayList<>();
+//            re.add(new DictionaryDataSet("asd", "asd", "eu"));
+//            re.add(new DictionaryDataSet("асд", "асд", "ru"));
+            MyAdapter adapter = new MyAdapter(dictionary.getTranslations(query));
             list.setAdapter(adapter);
         }
     }
@@ -107,11 +118,39 @@ public class DictionaryActivity extends AppCompatActivity {
         return true;
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
         Bus bus = ((ApplicationModified) getApplication()).getBus();
         bus.unregister(this);
+    }
+
+    private class MyAdapter extends ArrayAdapter<Translate> {
+        public MyAdapter(List<Translate> objects) {
+            super(DictionaryActivity.this, 0,objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
+                viewHolder = new ViewHolder();
+                viewHolder.translate = (TextView) convertView.findViewById(R.id.item_translate);
+                viewHolder.lang = (TextView) convertView.findViewById(R.id.item_lang);
+                convertView.setTag(viewHolder);
+            } else {
+                viewHolder = (ViewHolder) convertView.getTag();
+            }
+
+            viewHolder.translate.setText(getItem(position).getTranslate());
+            viewHolder.lang.setText(getItem(position).getLanguage());
+            return convertView;
+        }
+
+        private class ViewHolder {
+            public TextView translate;
+            public TextView lang;
+        }
     }
 }

@@ -4,13 +4,14 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import dbservice.Translate;
 import dictionary.Dictionary;
 
 /**
  * Created by ivan on 01.10.15
  */
 @DatabaseTable(tableName = "Dictionary")
-public class DictionaryDataSet {
+public class DictionaryDataSet implements Translate {
     public final static String WORD = "word";
     public final static String TRANSLATE = "translate";
     public final static String LANGUAGE = "language";

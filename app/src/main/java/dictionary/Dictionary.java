@@ -16,6 +16,7 @@ import java.util.Map;
 import dbservice.DBHelperFactory;
 import dbservice.DBService;
 import dbservice.DBServiceStubImpl;
+import dbservice.Translate;
 import retrofit.RetrofitError;
 import utils.MessageKey;
 import yandex.YandexCommunicator;
@@ -78,7 +79,7 @@ public class Dictionary {
         }
     }
 
-    public ArrayList<String> getTranslations(String query) {
+    public ArrayList<Translate> getTranslations(String query) {
         try {
             return dbService.getTranslations(query);
         } catch (SQLException e) {

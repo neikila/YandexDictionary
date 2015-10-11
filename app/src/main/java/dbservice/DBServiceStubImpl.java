@@ -81,11 +81,29 @@ public class DBServiceStubImpl implements DBService {
         return result;
     }
 
+    private class TranslateStub implements Translate {
+
+        @Override
+        public String getLanguage() {
+            return "Lang";
+        }
+
+        @Override
+        public String getTranslate() {
+            return "Translate";
+        }
+
+        @Override
+        public String getWord() {
+            return "Word";
+        }
+    }
+
     @Override
-    public ArrayList<String> getTranslations(String query) throws SQLException {
-        ArrayList <String> result = new ArrayList<>();
-        result.add("Word 1");
-        result.add("Word 2");
+    public ArrayList<Translate> getTranslations(String query) throws SQLException {
+        ArrayList <Translate> result = new ArrayList<>();
+        result.add(new TranslateStub());
+        result.add(new TranslateStub());
         return result;
     }
 }
