@@ -32,8 +32,10 @@ public class Dictionary {
     private YandexCommunicator communicator;
     private DBService dbService;
     private Bus bus;
+    private boolean isPrepared;
 
     private Dictionary() {
+        isPrepared = false;
         communicator = new YandexCommunicatorImpl();
         dbService = DBHelperFactory.getHelper();
 //        try {
@@ -41,6 +43,14 @@ public class Dictionary {
 //        } catch (SQLException e) {
 //            // Testing
 //        }
+    }
+
+    public boolean isPrepared() {
+        return isPrepared;
+    }
+
+    public void setPrepared(boolean value) {
+        isPrepared = value;
     }
 
     public static Dictionary getInstance() {

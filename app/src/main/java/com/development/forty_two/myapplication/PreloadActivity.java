@@ -31,27 +31,39 @@ public class PreloadActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bus bus = ((ApplicationModified) getApplication()).getBus();
-        bus.register(this);
+        if (dictionary.isPrepared()) {
+            skipToMain();
+        } else {
+            final Bus bus = ((ApplicationModified) getApplication()).getBus();
+            bus.register(this);
 
-        setContentView(R.layout.activity_preload);
-        dictionary.updateRoutes();
+            setContentView(R.layout.activity_preload);
+            dictionary.updateRoutes();
 
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                Bundle bundle = msg.getData();
-                String key = bundle.getString(MessageKey.KEY.toString());
-                if (key != null) {
-                    switch (MessageKey.valueOf(key)) {
-                        case UPDATE_ROUTES:
-                            Intent i = new Intent(PreloadActivity.this, MainActivity.class);
-                            startActivity(i);
-                            finish();
+            handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    Bundle bundle = msg.getData();
+                    String key = bundle.getString(MessageKey.KEY.toString());
+                    if (key != null) {
+                        switch (MessageKey.valueOf(key)) {
+                            case ERROR:
+                            case UPDATE_ROUTES:
+                                dictionary.setPrepared(true);
+                                bus.unregister(this);
+                                skipToMain();
+                                break;
+                        }
                     }
                 }
-            }
-        };
+            };
+        }
+    }
+
+    private void skipToMain() {
+        Intent i = new Intent(PreloadActivity.this, MainActivity.class);
+        startActivity(i);
+        finish();
     }
 
     @Override
