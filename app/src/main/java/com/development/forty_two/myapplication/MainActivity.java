@@ -1,6 +1,8 @@
 package com.development.forty_two.myapplication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -71,6 +73,10 @@ public class MainActivity extends AppCompatActivity {
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
 
+        SharedPreferences mSettings = getSharedPreferences(SettingsActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        from.setEnabled(!mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false));  // TODO внешне обозначить что спиннер и кнопка не активны
+        separately.setEnabled(!mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false));
+        
         /* Восстановление данных */
         if (savedInstanceState != null) {
             input.setText(savedInstanceState.getString(LAST_INPUT_WORD));

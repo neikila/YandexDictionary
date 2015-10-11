@@ -20,4 +20,5 @@
     <string name="main_reverse_translate_direction_button_description">Reverse direction</string>
     <string name="main_translate_button">Перевести</string>
     <string name="main_hint_input">Слово для перевода</string>
+    <string name="title_activity_history">HistoryActivity</string>
 </resources>

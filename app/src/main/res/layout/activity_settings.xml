@@ -23,7 +23,8 @@
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner"
+            android:spinnerMode="dialog"
+            android:id="@+id/limits_save"
             android:layout_weight="7"
             android:layout_gravity="center_vertical"/>
 

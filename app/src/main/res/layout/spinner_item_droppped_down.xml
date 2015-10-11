@@ -13,7 +13,7 @@
         <!--android:src="@drawable/ic_launcher" />-->
 
     <TextView
-        android:id="@+id/language"
+        android:id="@+id/ltem"
         android:singleLine="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
