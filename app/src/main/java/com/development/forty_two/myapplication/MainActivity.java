@@ -39,13 +39,14 @@ public class MainActivity extends AppCompatActivity {
     private static final String DEFAULT_LANG_FROM = "Английский";
     private static final String DEFAULT_LANG_TO = "Русский";
 
-    private static final String FROM = "from";
-    private static final String TO = "to";
+    private static final String FROM = "FROM";
+    private static final String TO = "TO";
 
     private static final String LAST_INPUT_WORD = "LAST_IN_WORD";
     private static final String LAST_OUTPUT_WORD = "LAST_OUT_WORD";
 
-    private Boolean isSwapping;
+    private String setTextIfLangChangedInput = "";
+    private String setTextIfLangChangedOutput = "";
 
     @Subscribe
     public void react(Message msg) {
@@ -72,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
+
 
         SharedPreferences mSettings = getSharedPreferences(SettingsActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
         from.setEnabled(!mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false));  // TODO внешне обозначить что спиннер и кнопка не активны
@@ -159,8 +161,10 @@ public class MainActivity extends AppCompatActivity {
 
                 // TODO спросить про то как тут очищать
 
-//                input.setText("");
-//                output.setText("");
+                input.setText(setTextIfLangChangedInput);
+                output.setText(setTextIfLangChangedOutput);
+                setTextIfLangChangedInput = "";
+                setTextIfLangChangedOutput = "";
             }
 
             @Override
@@ -192,9 +196,11 @@ public class MainActivity extends AppCompatActivity {
                 from.setSelection(((ArrayAdapter) from.getAdapter()).getPosition(fromLang));
                 updateRoute(fromLang, toLang, to);
 
-                Editable temp = input.getText();
-                input.setText(output.getText());
-                output.setText(temp);
+                setTextIfLangChangedOutput = input.getText().toString();
+                setTextIfLangChangedInput = output.getText().toString();
+                if (setTextIfLangChangedInput.equals("")) {
+                    setTextIfLangChangedOutput = "";
+                }
             }
         });
     }
