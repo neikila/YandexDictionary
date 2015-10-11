@@ -1,6 +1,5 @@
 package com.development.forty_two.myapplication;
 
-import android.app.SearchManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,17 +11,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import dbservice.Translate;
-import dbservice.dataSets.DictionaryDataSet;
-import dbservice.dataSets.LanguageDataSet;
 import dictionary.Dictionary;
 
 public class DictionaryActivity extends AppCompatActivity {
@@ -75,15 +70,8 @@ public class DictionaryActivity extends AppCompatActivity {
 
     private void showResults(String query) {
         if(query.length() >= 3){
-//            ArrayList<String> words = dictionary.getTranslations(query);
             ListView list = (ListView) findViewById(R.id.listWords);
-
-//            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-//                    R.layout.list_item, words);
-//            ArrayList <DictionaryDataSet> re = new ArrayList<>();
-//            re.add(new DictionaryDataSet("asd", "asd", "eu"));
-//            re.add(new DictionaryDataSet("асд", "асд", "ru"));
-            MyAdapter adapter = new MyAdapter(dictionary.getTranslations(query));
+            ListItemTranslationAdapter adapter = new ListItemTranslationAdapter(dictionary.getTranslations(query));
             list.setAdapter(adapter);
         }
     }
@@ -125,8 +113,8 @@ public class DictionaryActivity extends AppCompatActivity {
         bus.unregister(this);
     }
 
-    private class MyAdapter extends ArrayAdapter<Translate> {
-        public MyAdapter(List<Translate> objects) {
+    private class ListItemTranslationAdapter extends ArrayAdapter<Translate> {
+        public ListItemTranslationAdapter(List<Translate> objects) {
             super(DictionaryActivity.this, 0,objects);
         }
 
