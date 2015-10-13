@@ -12,35 +12,19 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:id="@+id/setting_dictionary"
-        android:orientation="horizontal"
-        android:layout_below="@id/dictionary_title"
-        android:layout_width="fill_parent"
+
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
-
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dialog"
-            android:id="@+id/limits_save"
-            android:layout_weight="7"
-            android:layout_gravity="center_vertical"/>
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_dictionary_name_button"
-            android:id="@+id/button2"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
+        android:layout_below="@id/dictionary_title"
+        android:text="@string/settings_dictionary_name_button"
+        android:id="@+id/cleanButton"
+        android:layout_centerHorizontal="true"/>
 
 
     <CheckBox
         android:id="@+id/checkBox"
-        android:layout_below="@id/setting_dictionary"
+        android:layout_below="@id/cleanButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/settings_dictionary_auto_complete"

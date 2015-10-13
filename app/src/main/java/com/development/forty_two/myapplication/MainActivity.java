@@ -67,16 +67,15 @@ public class MainActivity extends AppCompatActivity {
         final EditText input = (EditText) findViewById(R.id.editTextInput);
         final EditText output = (EditText) findViewById(R.id.editTextOutput);
 
-        final Switch separately = (Switch) findViewById(R.id.switchTranslateWords);
-
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
-
+        final ImageButton rotateButton = (ImageButton) findViewById(R.id.rotateButton);
 
         SharedPreferences mSettings = getSharedPreferences(SettingsActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
-        from.setEnabled(!mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false));  // TODO внешне обозначить что спиннер и кнопка не активны
-        separately.setEnabled(!mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false));
-        
+        if (mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false)){
+            from.setClickable(false);
+            rotateButton.setEnabled(false);
+        }
         /* Восстановление данных */
         if (savedInstanceState != null) {
             input.setText(savedInstanceState.getString(LAST_INPUT_WORD));
@@ -172,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         translate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!separately.isChecked()) {
+                if (true) { // TODO Убрал проверку включения тумблера
                     dictionary.translate(input.getText().toString(),
                             (String) from.getSelectedItem(),
                             (String) to.getSelectedItem()
@@ -183,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton rotateButton = (ImageButton) findViewById(R.id.rotateButton);
+
         rotateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
