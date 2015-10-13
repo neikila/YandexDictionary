@@ -46,7 +46,7 @@ public class Dictionary {
     }
 
     public void updateRoutes() {
-        new GetDirectionsAsyncTask().execute();
+        new GetDirectionsAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public ArrayList<String> getFromLanguages() {
@@ -83,10 +83,7 @@ public class Dictionary {
     }
 
     public void translate(String input, String sourceLanguage, String targetLanguage) {
-        new TranslateWordAsyncTask().execute(input, sourceLanguage, targetLanguage);
-    }
-
-    public void translateSeparately(String input) {
+        new TranslateWordAsyncTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, input, sourceLanguage, targetLanguage);
     }
 
     public class TranslateWordAsyncTask extends AsyncTask<String, Void, Void> {

@@ -3,6 +3,7 @@ package com.development.forty_two.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                         case UPDATE_ROUTES:
                             String toLang = (String) to.getSelectedItem();
                             String fromLang = (String) from.getSelectedItem();
-                            updateRoute(fromLang, toLang, to);
+                            new UpdateRouteAsyncTask().execute(fromLang, toLang);
                             Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
                             break;
                         case ERROR:
@@ -155,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String toLang = (String) to.getSelectedItem();
                 String fromLang = (String) from.getSelectedItem();
-                updateRoute(fromLang, toLang, to);
+                new UpdateRouteAsyncTask().execute(fromLang, toLang);
 
                 input.setText(setTextIfLangChangedInput);
                 output.setText(setTextIfLangChangedOutput);
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 String toLang = (String) from.getSelectedItem();
                 String fromLang = (String) to.getSelectedItem();
                 from.setSelection(((ArrayAdapter) from.getAdapter()).getPosition(fromLang));
-                updateRoute(fromLang, toLang, to);
+                new UpdateRouteAsyncTask().execute(fromLang, toLang);
 
                 setTextIfLangChangedOutput = input.getText().toString();
                 setTextIfLangChangedInput = output.getText().toString();
@@ -247,18 +248,6 @@ public class MainActivity extends AppCompatActivity {
         outState.putString(LAST_OUTPUT_WORD, out.getText().toString());
     }
 
-    private void updateRoute(String fromLang , String toLang, Spinner to) {
-        ArrayList<String> toLangs = dictionary.getToLangPairedWithGivenLang(fromLang);
-        ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
-        temp.clear();
-        temp.addAll(toLangs);
-        if (toLangs.contains(toLang)) {
-            to.setSelection(temp.getPosition(toLang));
-        } else {
-            to.setSelection(0);
-        }
-    }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -295,4 +284,29 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
     }
 
+    private class UpdateRouteAsyncTask extends AsyncTask <String, Void, Void> {
+        private ArrayList<String> toLangs;
+        private String toLang;
+        @Override
+        protected Void doInBackground(String... params) {
+            String fromLang = params[0];
+            toLang = params[1];
+            toLangs = dictionary.getToLangPairedWithGivenLang(fromLang);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
+            ArrayAdapter temp = ((ArrayAdapter) to.getAdapter());
+            temp.clear();
+            temp.addAll(toLangs);
+            if (toLangs.contains(toLang)) {
+                to.setSelection(temp.getPosition(toLang));
+            } else {
+                to.setSelection(0);
+            }
+        }
+    }
 }
