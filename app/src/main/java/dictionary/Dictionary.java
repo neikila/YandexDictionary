@@ -5,25 +5,19 @@ import android.os.Bundle;
 import android.os.Message;
 
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import dbservice.DBHelperFactory;
 import dbservice.DBService;
-import dbservice.DBServiceStubImpl;
 import dbservice.Translate;
 import retrofit.RetrofitError;
 import utils.MessageKey;
 import yandex.YandexCommunicator;
 import yandex.YandexCommunicatorImpl;
-import yandex.YandexCommunicatorStubImpl;
 import utils.ErrorTypes;
-import yandex.YandexResponseLanguage;
 
 /**
  * Created by neikila on 25.09.15.
@@ -55,9 +49,9 @@ public class Dictionary {
         new GetDirectionsAsyncTask().execute();
     }
 
-    public ArrayList<String> getLanguages() {
+    public ArrayList<String> getFromLanguages() {
         try {
-            return dbService.getAllLangs();
+            return dbService.getAllFromLangs();
         } catch (SQLException e) {
             // TODO обработка exception
             return null;

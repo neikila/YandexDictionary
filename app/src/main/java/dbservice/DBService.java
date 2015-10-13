@@ -22,7 +22,7 @@ public interface DBService {
 
     ArrayList<String> getToLangPairedWithGivenLang(String language) throws SQLException;
 
-    ArrayList<String> getAllLangs() throws SQLException;
+    ArrayList<String> getAllFromLangs() throws SQLException;
 
     ArrayList<Translate> getTranslations(String query) throws SQLException;
 }

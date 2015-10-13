@@ -73,7 +73,7 @@ public class DBServiceStubImpl implements DBService {
     }
 
     @Override
-    public ArrayList<String> getAllLangs() {
+    public ArrayList<String> getAllFromLangs() {
         ArrayList<String> result = new ArrayList<>();
         result.add("Каталанский");
         result.add("Тагальский");

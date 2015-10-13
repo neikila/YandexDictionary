@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.otto.Bus;
@@ -128,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
         /* Setting data for spinners */
         ArrayAdapter <String> adapterFrom = new ArrayAdapter<>(this, R.layout.spinner_item,
-                R.id.ltem, dictionary.getLanguages());
+                R.id.ltem, dictionary.getFromLanguages());
         adapterFrom.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         from.setAdapter(adapterFrom);
         if (savedInstanceState != null && savedInstanceState.containsKey(FROM)) {

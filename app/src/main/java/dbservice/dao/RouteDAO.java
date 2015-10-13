@@ -32,6 +32,10 @@ public class RouteDAO extends BaseDaoImpl<RouteDataSet, Integer> {
                 queryForFirst());
     }
 
+    public boolean isExistRouteWithFrom(String lang) throws SQLException {
+        return (null != queryBuilder().where().eq(RouteDataSet.FROM, lang).queryForFirst());
+    }
+
     public void saveRoutes(ArrayList<RouteDataSet> routes) throws SQLException {
         for (int i = 0; i < routes.size(); i++) {
             create(routes.get(i));

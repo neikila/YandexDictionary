@@ -177,11 +177,13 @@ public class DBServiceImpl extends OrmLiteSqliteOpenHelper implements DBService 
     }
 
     @Override
-    public ArrayList<String> getAllLangs() throws SQLException {
+    public ArrayList<String> getAllFromLangs() throws SQLException {
         ArrayList <LanguageDataSet> temp = languageDAO.getAllLangs();
         ArrayList <String> result = new ArrayList<>();
         for (LanguageDataSet el: temp) {
-            result.add(el.getLanguage());
+            if (routeDAO.isExistRouteWithFrom(el.getReduced())) {
+                result.add(el.getLanguage());
+            }
         }
         return result;
     }
