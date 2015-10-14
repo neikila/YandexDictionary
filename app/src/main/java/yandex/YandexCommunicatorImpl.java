@@ -29,7 +29,12 @@ public class YandexCommunicatorImpl implements YandexCommunicator {
 
     @Override
     public String translate(String inLang, String outLang, String input) {
-        String lang = inLang + "-" + outLang;
+        String lang;
+        if (inLang.equals("")) {
+            lang = outLang;
+        } else {
+            lang = inLang + "-" + outLang;
+        }
         YandexResponseTranslated tmp = service.translate(YANDEX_KEY, input, lang);
         return tmp.getText();
     }

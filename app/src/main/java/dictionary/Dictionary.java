@@ -47,11 +47,7 @@ public class Dictionary {
     }
 
     public void clearDict() {
-        try {
-            dbService.clearDictionary();
-        } catch (SQLException e) {
-            // Testing
-        }
+        new ClearAsyncTask().execute();
     }
 
     public void updateRoutes() {
@@ -66,7 +62,7 @@ public class Dictionary {
         try {
             return dbService.getToLangPairedWithGivenLang(dbService.getReduced(lang));
         } catch (SQLException e) {
-            // TODO log
+            // Error there is nothing we can do with it
             return null;
         }
     }
@@ -101,12 +97,16 @@ public class Dictionary {
             Bundle bundle = new Bundle();
 
             try {
-                String from = dbService.getReduced(sourceLanguage);
+                String from;
+                if (sourceLanguage.equals("")) {
+                    from = "";
+                } else {
+                    from = dbService.getReduced(sourceLanguage);
+                }
                 String to = dbService.getReduced(targetLanguage);
 
-                if ((result = dbService.translate(input, from, to)) == null) {
-                        result = communicator.translate(from, to, input);
-
+                if (from.equals("") || (result = dbService.translate(input, from, to)) == null) {
+                    result = communicator.translate(from, to, input);
                     dbService.saveTranslate(input, result, to);
                 }
                 bundle.putString(MessageKey.KEY.toString(), MessageKey.TRANSLATE_IS_READY.toString());
@@ -157,4 +157,18 @@ public class Dictionary {
             return null;
         }
    }
+
+
+    private class ClearAsyncTask extends AsyncTask <Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                dbService.clearDictionary();
+            } catch (SQLException e) {
+                // Error, There is nothing we can do with it
+            }
+            return null;
+        }
+    }
 }
