@@ -18,7 +18,9 @@ public class ApplicationModified extends Application {
     public void onCreate() {
         DBHelperFactory.setHelper(getApplicationContext());
         bus = new Bus(ThreadEnforcer.ANY);
-        Dictionary.getInstance().setBus(bus);
+        Dictionary dictionary = Dictionary.getInstance();
+        dictionary.setBus(bus);
+        dictionary.updateRoutes();
         super.onCreate();
     }
 

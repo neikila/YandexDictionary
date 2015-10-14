@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-        dictionary.updateRoutes();
+//        dictionary.updateRoutes();
 
         /* Set ersing output */
         input.addTextChangedListener(new TextWatcher() {
@@ -131,24 +131,25 @@ public class MainActivity extends AppCompatActivity {
         adapterFrom.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         from.setAdapter(adapterFrom);
         if (savedInstanceState != null && savedInstanceState.containsKey(FROM)) {
-            from.getSelectedItemPosition();
-            from.setSelection(savedInstanceState.getInt(FROM));
+            from.setSelection(adapterFrom.getPosition(savedInstanceState.getString(FROM)));
         } else {
             from.setSelection(adapterFrom.getPosition(DEFAULT_LANG_FROM));
         }
 
+        String toLang;
+        if (savedInstanceState != null && savedInstanceState.containsKey(TO)) {
+            toLang = savedInstanceState.getString(TO);
+        } else {
+            toLang = DEFAULT_LANG_TO;
+        }
+        ArrayList <String> temp = new ArrayList<>();
+        temp.add(toLang);
+
         ArrayAdapter <String> adapterTo = new ArrayAdapter<>(this, R.layout.spinner_item,
-                R.id.ltem, dictionary.getToLangPairedWithGivenLang((String)from.getSelectedItem()));
+                R.id.ltem, temp);
         adapterTo.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         to.setAdapter(adapterTo);
-
-        if (savedInstanceState != null && savedInstanceState.containsKey(TO)) {
-            to.getSelectedItemPosition();
-            to.setSelection(savedInstanceState.getInt(TO));
-        } else {
-            to.setSelection(adapterTo.getPosition(DEFAULT_LANG_TO));
-        }
-
+        new UpdateRouteAsyncTask().execute((String)from.getSelectedItem(), toLang);
 
         /* Change from language */
         from.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -238,8 +239,8 @@ public class MainActivity extends AppCompatActivity {
 
         Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
-        outState.putInt(FROM, from.getSelectedItemPosition());
-        outState.putInt(TO, to.getSelectedItemPosition());
+        outState.putString(FROM, (String) from.getSelectedItem());
+        outState.putString(TO, (String) to.getSelectedItem());
 
 
         EditText in = (EditText) findViewById(R.id.editTextInput);
@@ -287,6 +288,7 @@ public class MainActivity extends AppCompatActivity {
     private class UpdateRouteAsyncTask extends AsyncTask <String, Void, Void> {
         private ArrayList<String> toLangs;
         private String toLang;
+
         @Override
         protected Void doInBackground(String... params) {
             String fromLang = params[0];
