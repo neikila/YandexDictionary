@@ -19,7 +19,6 @@ import java.util.ArrayList;
 public class SettingsActivity extends AppCompatActivity {
 
     public static final String APP_PREFERENCES = "settings";
-    public static final String APP_PREFERENCES_LIMITS_SAVE = "limits_save";
     public static final String APP_PREFERENCES_AUTOSAVE_HISTORY = "autosave_history";
     public static final String APP_PREFERENCES_AUTODETERMINE_INLANG = "autodetermine_inlang";
     private SharedPreferences mSettings;
@@ -27,14 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ArrayList<Integer> limits = new ArrayList<>();
-        limits.add(10);
-        limits.add(25);
-        limits.add(50);
-        limits.add(100);
-        final ArrayAdapter<Integer> limitsAdap = new ArrayAdapter<Integer>(this,R.layout.spinner_item,
-                R.id.ltem,limits);
-        limitsAdap.setDropDownViewResource(R.layout.spinner_item_droppped_down);
+
         setContentView(R.layout.activity_settings);
 
 
@@ -42,19 +34,15 @@ public class SettingsActivity extends AppCompatActivity {
 
         final CheckBox autoSave = (CheckBox) findViewById(R.id.checkBox);
         final CheckBox autoDetermine = (CheckBox) findViewById(R.id.checkBox2);
-        final Spinner limitsSpin = (Spinner) findViewById(R.id.limits_save);
-        limitsSpin.setAdapter(limitsAdap);
-        limitsSpin.setSelection(0);
+
 
         if (mSettings.contains(APP_PREFERENCES_AUTOSAVE_HISTORY)) {
             autoSave.setChecked(mSettings.getBoolean(APP_PREFERENCES_AUTOSAVE_HISTORY, false));
         }
         if (mSettings.contains(APP_PREFERENCES_AUTODETERMINE_INLANG)){
-            autoDetermine.setChecked(mSettings.getBoolean(APP_PREFERENCES_AUTODETERMINE_INLANG,false));
+            autoDetermine.setChecked(mSettings.getBoolean(APP_PREFERENCES_AUTODETERMINE_INLANG, false));
         }
-        if (mSettings.contains(APP_PREFERENCES_LIMITS_SAVE)){
-            limitsSpin.setSelection(limitsAdap.getPosition(mSettings.getInt(APP_PREFERENCES_LIMITS_SAVE,10)));
-        }
+
 
         autoSave.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -69,32 +57,18 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 SharedPreferences.Editor editor = mSettings.edit();
-                editor.putBoolean(APP_PREFERENCES_AUTODETERMINE_INLANG,isChecked);
+                editor.putBoolean(APP_PREFERENCES_AUTODETERMINE_INLANG, isChecked);
                 editor.commit();
             }
         });
-        limitsSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                SharedPreferences.Editor editor = mSettings.edit();
-                editor.putInt(APP_PREFERENCES_LIMITS_SAVE,limitsAdap.getItem(position));
-                editor.commit();
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                SharedPreferences.Editor editor = mSettings.edit();
-                editor.putInt(APP_PREFERENCES_LIMITS_SAVE,10);
-                editor.commit();
-            }
-        });
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_settings, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 

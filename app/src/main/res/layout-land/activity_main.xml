@@ -40,41 +40,23 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/inputTextAndSwitch"
-        android:layout_width="fill_parent"
+
+    <EditText
+        android:id="@+id/editTextInput"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/chooseLanguageBar">
+        android:ems="15"
+        android:inputType="textMultiLine"
+        android:hint="@string/main_hint_input"
+        android:layout_below="@id/chooseLanguageBar"
+        android:layout_marginTop="10dp" />
 
-        <EditText
-            android:id="@+id/editTextInput"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:hint="@string/main_hint_input"
-            android:ems="13"
-            android:layout_below="@id/chooseLanguageBar"
-            android:layout_marginTop="10dp"
-            android:layout_weight="2"/>
-
-        <Switch
-            android:id="@+id/switchTranslateWords"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:text="@string/main_switch_translate_separately"
-            android:checked="false"
-            android:layout_weight="4"
-            android:layout_gravity="bottom"/>
-
-
-    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_below="@id/inputTextAndSwitch"
+        android:layout_below="@id/editTextInput"
         android:layout_marginTop="20dp"
         android:id="@+id/linearLayout">
 
