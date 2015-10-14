@@ -72,11 +72,7 @@ public class MainActivity extends AppCompatActivity {
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
         final ImageButton rotateButton = (ImageButton) findViewById(R.id.rotateButton);
 
-        SharedPreferences mSettings = getSharedPreferences(SettingsActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
-        if (mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false)){
-            from.setClickable(false);
-            rotateButton.setEnabled(false);
-        }
+
         /* Восстановление данных */
         if (savedInstanceState != null) {
             input.setText(savedInstanceState.getString(LAST_INPUT_WORD));
@@ -228,6 +224,21 @@ public class MainActivity extends AppCompatActivity {
         super.onRestart();
         Bus bus = ((ApplicationModified) getApplication()).getBus();
         bus.register(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
+        final ImageButton rotateButton = (ImageButton) findViewById(R.id.rotateButton);
+        SharedPreferences mSettings = getSharedPreferences(SettingsActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+        if (mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false)){
+            from.setClickable(false);
+            rotateButton.setClickable(false);
+        } else {
+            from.setClickable(true);
+            rotateButton.setClickable(true);
+        }
     }
 
     @Override

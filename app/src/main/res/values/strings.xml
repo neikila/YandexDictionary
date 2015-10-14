@@ -16,6 +16,7 @@
     <string name="settings_dictionary_name_button">Очистить словарь</string>
     <string name="settings_dictionary_auto_complete">Автоматически cохранять в словарь</string>
     <string name="settings_translate_auto_language">Автоматически определять язык</string>
+    <string name="settings_translate_get_languages">Обновить языки</string>
     <string name="main_switch_translate_separately">По словам</string>
     <string name="main_reverse_translate_direction_button_description">Reverse direction</string>
     <string name="main_translate_button">Перевести</string>
