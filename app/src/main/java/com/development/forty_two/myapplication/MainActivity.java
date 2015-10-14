@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String LAST_INPUT_WORD = "LAST_IN_WORD";
     private static final String LAST_OUTPUT_WORD = "LAST_OUT_WORD";
 
-    private String setTextIfLangChangedInput = "";
-    private String setTextIfLangChangedOutput = "";
-
     private boolean isRotating = false;
 
     @Subscribe
@@ -67,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
         Bus bus = ((ApplicationModified) getApplication()).getBus();
         bus.register(this);
-//        dictionary.setBus(bus);
 
         final EditText input = (EditText) findViewById(R.id.editTextInput);
         final EditText output = (EditText) findViewById(R.id.editTextOutput);
@@ -99,10 +95,12 @@ public class MainActivity extends AppCompatActivity {
                             output.setText(bundle.getString(MessageKey.TRANSLATE_RESULT.toString()));
                             break;
                         case UPDATE_ROUTES:
-                            String toLang = (String) to.getSelectedItem();
                             String fromLang = (String) from.getSelectedItem();
-                            new UpdateRouteAsyncTask().execute(fromLang, toLang);
-                            Toast.makeText(getApplicationContext(), "Updated", Toast.LENGTH_SHORT).show();
+                            ArrayAdapter <String> adapterFrom = (ArrayAdapter)from.getAdapter();
+                            adapterFrom.clear();
+                            adapterFrom.addAll(dictionary.getFromLanguages());
+                            from.setAdapter(adapterFrom);
+                            from.setSelection(adapterFrom.getPosition(fromLang));
                             break;
                         case ERROR:
                             reflectOnError(ErrorTypes.valueOf(bundle.getString(MessageKey.ERROR_TYPE.toString())));
@@ -110,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-//        dictionary.updateRoutes();
 
         /* Set ersing output */
         input.addTextChangedListener(new TextWatcher() {
@@ -150,11 +147,6 @@ public class MainActivity extends AppCompatActivity {
                 String toLang = (String) to.getSelectedItem();
                 String fromLang = (String) from.getSelectedItem();
                 new UpdateRouteAsyncTask().execute(fromLang, toLang);
-
-                input.setText(setTextIfLangChangedInput);
-                output.setText(setTextIfLangChangedOutput);
-                setTextIfLangChangedInput = "";
-                setTextIfLangChangedOutput = "";
             }
 
             @Override
@@ -196,11 +188,13 @@ public class MainActivity extends AppCompatActivity {
                     to.setSelection(0);
                     from.setSelection(((ArrayAdapter) from.getAdapter()).getPosition(fromLang));
 
-                    setTextIfLangChangedOutput = input.getText().toString();
-                    setTextIfLangChangedInput = output.getText().toString();
-                    if (setTextIfLangChangedInput.equals("")) {
-                        setTextIfLangChangedOutput = "";
+                    String outputWord = input.getText().toString();
+                    String inputWord = output.getText().toString();
+                    if (inputWord.equals("")) {
+                        outputWord = "";
                     }
+                    input.setText(inputWord);
+                    output.setText(outputWord);
                 }
             }
         });
