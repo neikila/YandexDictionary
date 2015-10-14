@@ -65,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         Bus bus = ((ApplicationModified) getApplication()).getBus();
         bus.register(this);
 
+        final SharedPreferences mSettings = getSharedPreferences(SettingsActivity.APP_PREFERENCES, Context.MODE_PRIVATE);
+
         final EditText input = (EditText) findViewById(R.id.editTextInput);
         final EditText output = (EditText) findViewById(R.id.editTextOutput);
 
@@ -165,8 +167,14 @@ public class MainActivity extends AppCompatActivity {
         translate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String inputLang;
+                if (mSettings.getBoolean(SettingsActivity.APP_PREFERENCES_AUTODETERMINE_INLANG,false)) {
+                    inputLang = "";
+                } else {
+                    inputLang = (String) from.getSelectedItem();
+                }
                 dictionary.translate(input.getText().toString(),
-                        (String) from.getSelectedItem(),
+                        inputLang,
                         (String) to.getSelectedItem()
                 );
             }
