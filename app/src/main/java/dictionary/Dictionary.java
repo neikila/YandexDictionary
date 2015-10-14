@@ -96,6 +96,10 @@ public class Dictionary {
             Message msg = new Message();
             Bundle bundle = new Bundle();
 
+            if (input.equals("")) {
+                return null;
+            }
+
             try {
                 String from;
                 if (sourceLanguage.equals("")) {

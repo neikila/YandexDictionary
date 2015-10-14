@@ -24,12 +24,6 @@ public class ApplicationModified extends Application {
         super.onCreate();
     }
 
-    @Override
-    public void onTerminate() {
-        super.onTerminate();
-        DBHelperFactory.releaseHelper();
-    }
-
     public Bus getBus() {
         return bus;
     }

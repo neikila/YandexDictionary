@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,10 +19,15 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dictionary.Dictionary;
+import utils.ErrorTypes;
+import utils.MessageKey;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -29,10 +36,38 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_AUTODETERMINE_INLANG = "autodetermine_inlang";
     private SharedPreferences mSettings;
     private Dictionary dictionary;
+    private Handler handler;
+
+    @Subscribe
+    public void react(Message msg) {
+        if (handler != null) {
+            handler.sendMessage(msg);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                Bundle bundle = msg.getData();
+                String key = bundle.getString(MessageKey.KEY.toString());
+                if (key != null) {
+                    switch (MessageKey.valueOf(key)) {
+                        case UPDATE_ROUTES:
+                            Toast.makeText(getApplicationContext(), "Languages updated", Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }
+            }
+        };
+
+
+        Bus bus = ((ApplicationModified) getApplication()).getBus();
+        bus.register(this);
+
         dictionary = Dictionary.getInstance();
 
         setContentView(R.layout.activity_settings);
@@ -86,6 +121,19 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Bus bus = ((ApplicationModified) getApplication()).getBus();
+        bus.register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Bus bus = ((ApplicationModified) getApplication()).getBus();
+        bus.unregister(this);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
