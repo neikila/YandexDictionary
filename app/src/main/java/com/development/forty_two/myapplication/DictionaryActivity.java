@@ -36,11 +36,6 @@ public class DictionaryActivity extends AppCompatActivity {
         dictionary = Dictionary.getInstance();
 
         SearchView search = (SearchView) findViewById(R.id.searchWord);
-        if (savedInstanceState != null && savedInstanceState.containsKey(SEARCH_FIELD)) {
-            // TODO восстановление состояния SearchView
-//            search.setSubmitButtonEnabled(savedInstanceState.getInt(SEARCH_FIELD) == 1);
-//            search.setQuery("test", true);
-        }
         search.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
 
             @Override
@@ -56,12 +51,6 @@ public class DictionaryActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        SearchView search = (SearchView) findViewById(R.id.searchWord);
-        outState.putInt(SEARCH_FIELD, search.isSubmitButtonEnabled()? 1: 0);
-    }
 
     @Override
     protected void onStart() {
