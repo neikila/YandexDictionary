@@ -47,9 +47,13 @@ public class MainActivity extends AppCompatActivity {
     private String setTextIfLangChangedInput = "";
     private String setTextIfLangChangedOutput = "";
 
+    private boolean isRotating = false;
+
     @Subscribe
     public void react(Message msg) {
-        handler.sendMessage(msg);
+        if (handler != null) {
+            handler.sendMessage(msg);
+        }
     }
 
     public MainActivity() {
@@ -189,15 +193,19 @@ public class MainActivity extends AppCompatActivity {
         rotateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String toLang = (String) from.getSelectedItem();
-                String fromLang = (String) to.getSelectedItem();
-                from.setSelection(((ArrayAdapter) from.getAdapter()).getPosition(fromLang));
-                new UpdateRouteAsyncTask().execute(fromLang, toLang);
+                if (!isRotating) {
+                    isRotating = true;
+                    String toLang = (String) from.getSelectedItem();
+                    String fromLang = (String) to.getSelectedItem();
+                    ((ArrayAdapter) to.getAdapter()).insert(toLang, 0);
+                    to.setSelection(0);
+                    from.setSelection(((ArrayAdapter) from.getAdapter()).getPosition(fromLang));
 
-                setTextIfLangChangedOutput = input.getText().toString();
-                setTextIfLangChangedInput = output.getText().toString();
-                if (setTextIfLangChangedInput.equals("")) {
-                    setTextIfLangChangedOutput = "";
+                    setTextIfLangChangedOutput = input.getText().toString();
+                    setTextIfLangChangedInput = output.getText().toString();
+                    if (setTextIfLangChangedInput.equals("")) {
+                        setTextIfLangChangedOutput = "";
+                    }
                 }
             }
         });
@@ -308,6 +316,10 @@ public class MainActivity extends AppCompatActivity {
                 to.setSelection(temp.getPosition(toLang));
             } else {
                 to.setSelection(0);
+            }
+
+            if (isRotating) {
+                isRotating = false;
             }
         }
     }
