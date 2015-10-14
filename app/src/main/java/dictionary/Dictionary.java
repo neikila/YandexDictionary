@@ -37,11 +37,6 @@ public class Dictionary {
         } catch (SQLException e) {
             prepared = new ArrayList<>();
         }
-//        try {
-//            dbService.clearDictionary();
-//        } catch (SQLException e) {
-//            // Testing
-//        }
     }
 
     public static Dictionary getInstance() {
@@ -49,6 +44,14 @@ public class Dictionary {
             dictionary = new Dictionary();
         }
         return dictionary;
+    }
+
+    public void clearDict() {
+        try {
+            dbService.clearDictionary();
+        } catch (SQLException e) {
+            // Testing
+        }
     }
 
     public void updateRoutes() {

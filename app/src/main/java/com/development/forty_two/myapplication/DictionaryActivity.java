@@ -26,8 +26,6 @@ public class DictionaryActivity extends AppCompatActivity {
     private Dictionary dictionary;
     private Bus bus;
 
-    private static final String SEARCH_FIELD = "searchField";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

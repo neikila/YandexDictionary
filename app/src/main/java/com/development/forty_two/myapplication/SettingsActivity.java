@@ -10,11 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
+
+import dictionary.Dictionary;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -22,13 +25,14 @@ public class SettingsActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_AUTOSAVE_HISTORY = "autosave_history";
     public static final String APP_PREFERENCES_AUTODETERMINE_INLANG = "autodetermine_inlang";
     private SharedPreferences mSettings;
+    private Dictionary dictionary;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dictionary = Dictionary.getInstance();
 
         setContentView(R.layout.activity_settings);
-
 
         mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -62,6 +66,21 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        final Button updateRoutes = (Button) findViewById(R.id.updateRoutes);
+        updateRoutes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dictionary.updateRoutes();
+            }
+        });
+
+        final Button cleanButton = (Button) findViewById(R.id.cleanButton);
+        cleanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dictionary.clearDict();
+            }
+        });
     }
 
 

@@ -47,9 +47,10 @@
         android:layout_marginTop="10dp"/>
 
     <Button
+        android:id="@+id/updateRoutes"
+        android:layout_below="@id/checkBox2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/checkBox2"
         android:layout_marginTop="10dp"
         android:text="@string/settings_translate_get_languages"/>
     <!-- Lower part-->
