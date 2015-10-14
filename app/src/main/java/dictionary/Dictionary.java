@@ -27,10 +27,17 @@ public class Dictionary {
     private YandexCommunicator communicator;
     private DBService dbService;
     private Bus bus;
+    private ArrayList <String> prepared;
 
     private Dictionary() {
         communicator = new YandexCommunicatorImpl();
         dbService = DBHelperFactory.getHelper();
+        try {
+            prepared = dbService.getAllFromLangs();
+        } catch (SQLException e) {
+            prepared = new ArrayList<>();
+            // TODO обработка exception
+        }
 //        try {
 //            dbService.clearDictionary();
 //        } catch (SQLException e) {
@@ -50,12 +57,7 @@ public class Dictionary {
     }
 
     public ArrayList<String> getFromLanguages() {
-        try {
-            return dbService.getAllFromLangs();
-        } catch (SQLException e) {
-            // TODO обработка exception
-            return null;
-        }
+        return prepared;
     }
 
     public ArrayList<String> getToLangPairedWithGivenLang(String lang) {
@@ -134,6 +136,7 @@ public class Dictionary {
             Bundle bundle = new Bundle();
             try {
                 dbService.saveRoutes(communicator.getDirLanguages().getArray());
+                prepared = dbService.getAllFromLangs();
                 bundle.putString(MessageKey.KEY.toString(), MessageKey.UPDATE_ROUTES.toString());
             }
             catch (SQLException e) {

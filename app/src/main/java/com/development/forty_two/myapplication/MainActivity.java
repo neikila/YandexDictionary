@@ -130,16 +130,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /* Setting data for spinners */
-        ArrayAdapter <String> adapterFrom = new ArrayAdapter<>(this, R.layout.spinner_item,
-                R.id.ltem, dictionary.getFromLanguages());
-        adapterFrom.setDropDownViewResource(R.layout.spinner_item_droppped_down);
-        from.setAdapter(adapterFrom);
-        if (savedInstanceState != null && savedInstanceState.containsKey(FROM)) {
-            from.setSelection(adapterFrom.getPosition(savedInstanceState.getString(FROM)));
-        } else {
-            from.setSelection(adapterFrom.getPosition(DEFAULT_LANG_FROM));
-        }
-
         String toLang;
         if (savedInstanceState != null && savedInstanceState.containsKey(TO)) {
             toLang = savedInstanceState.getString(TO);
@@ -153,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
                 R.id.ltem, temp);
         adapterTo.setDropDownViewResource(R.layout.spinner_item_droppped_down);
         to.setAdapter(adapterTo);
-        new UpdateRouteAsyncTask().execute((String)from.getSelectedItem(), toLang);
 
         /* Change from language */
         from.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -173,6 +162,17 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        ArrayAdapter <String> adapterFrom = new ArrayAdapter<>(this, R.layout.spinner_item,
+                R.id.ltem, dictionary.getFromLanguages());
+        adapterFrom.setDropDownViewResource(R.layout.spinner_item_droppped_down);
+        from.setAdapter(adapterFrom);
+        if (savedInstanceState != null && savedInstanceState.containsKey(FROM)) {
+            from.setSelection(adapterFrom.getPosition(savedInstanceState.getString(FROM)));
+        } else {
+            from.setSelection(adapterFrom.getPosition(DEFAULT_LANG_FROM));
+        }
+
 
         Button translate = (Button) findViewById(R.id.button_translate);
         translate.setOnClickListener(new View.OnClickListener() {

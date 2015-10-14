@@ -31,7 +31,6 @@ public class DictionaryDAO extends BaseDaoImpl<DictionaryDataSet, Integer> {
 
     public String translate(String word, String language) throws SQLException {
         QueryBuilder<DictionaryDataSet, Integer> queryBuilder = queryBuilder();
-//        List<DictionaryDataSet> dataList = queryBuilder.where().eq("word", word).and().eq("language", language).query();
         DictionaryDataSet data = queryBuilder.where()
                 .eq(DictionaryDataSet.WORD, word).and()
                 .eq(DictionaryDataSet.LANGUAGE, language)
