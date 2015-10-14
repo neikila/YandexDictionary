@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dictionary.Dictionary;
+import utils.ErrorReflection;
 import utils.ErrorTypes;
 import utils.MessageKey;
 
@@ -60,12 +61,11 @@ public class SettingsActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Languages updated", Toast.LENGTH_LONG).show();
                             break;
                         case ERROR:
-                            reflectOnError(ErrorTypes.valueOf(bundle.getString(MessageKey.ERROR_TYPE.toString())));
+                            ErrorReflection.reflectOnError(getApplicationContext(), ErrorTypes.valueOf(bundle.getString(MessageKey.ERROR_TYPE.toString())));
                     }
                 }
             }
         };
-
 
         Bus bus = ((ApplicationModified) getApplication()).getBus();
         bus.register(this);
@@ -121,29 +121,6 @@ public class SettingsActivity extends AppCompatActivity {
                 new ClearAsyncTask().execute();
             }
         });
-    }
-
-    private void reflectOnError(ErrorTypes type) {
-        String errorMessage;
-        switch (type) {
-            case SqlError:
-                errorMessage = "Sorry. There is a error in application please reload application." +
-                        "If it hasn't solved your problem, please, reinstall application.";
-                break;
-            case TranslationError:
-                errorMessage = "Sorry. There is a error in application please reload application." +
-                        "If it hasn't solved your problem, please, reinstall application.";
-                break;
-            case NoInternetCantUpdateRoutes:
-                errorMessage = "No Internet connection. Can't update routes.";
-                break;
-            case NoInternet:
-                errorMessage = "Word is not in database and there is no Internet connection";
-                break;
-            default:
-                errorMessage = "Nice day, don't you think so?";
-        }
-        Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_LONG).show();
     }
 
     @Override
