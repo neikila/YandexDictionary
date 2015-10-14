@@ -36,7 +36,6 @@ public class Dictionary {
             prepared = dbService.getAllFromLangs();
         } catch (SQLException e) {
             prepared = new ArrayList<>();
-            // TODO обработка exception
         }
 //        try {
 //            dbService.clearDictionary();
@@ -79,9 +78,8 @@ public class Dictionary {
         try {
             return dbService.getTranslations(query);
         } catch (SQLException e) {
-            // TODO обработка ошибки
+            return new ArrayList<>();
         }
-        return new ArrayList<>();
     }
 
     public void translate(String input, String sourceLanguage, String targetLanguage) {

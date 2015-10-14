@@ -23,12 +23,6 @@ public class DictionaryDAO extends BaseDaoImpl<DictionaryDataSet, Integer> {
         super(connectionSource, dataClass);
     }
 
-    public void getAll() throws SQLException {
-        List<DictionaryDataSet> result = queryBuilder().query();
-        // Todo delete it
-        return;
-    }
-
     public String translate(String word, String language) throws SQLException {
         QueryBuilder<DictionaryDataSet, Integer> queryBuilder = queryBuilder();
         DictionaryDataSet data = queryBuilder.where()

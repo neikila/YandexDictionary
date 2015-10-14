@@ -177,14 +177,10 @@ public class MainActivity extends AppCompatActivity {
         translate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (true) { // TODO Убрал проверку включения тумблера
-                    dictionary.translate(input.getText().toString(),
-                            (String) from.getSelectedItem(),
-                            (String) to.getSelectedItem()
-                    );
-                } else {
-                    // TODO многострочный вывод
-                }
+                dictionary.translate(input.getText().toString(),
+                        (String) from.getSelectedItem(),
+                        (String) to.getSelectedItem()
+                );
             }
         });
 
