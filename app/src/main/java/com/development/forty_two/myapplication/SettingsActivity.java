@@ -3,6 +3,7 @@ package com.development.forty_two.myapplication;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +15,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dictionary.Dictionary;
@@ -78,7 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
         cleanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dictionary.clearDict();
+                new ClearAsyncTask().execute();
             }
         });
     }
@@ -112,4 +115,24 @@ public class SettingsActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         return true;
     }
+
+    private class ClearAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                dictionary.clearDict();
+            } catch (SQLException e) {
+                // Error, There is nothing we can do with it
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Toast.makeText(getApplicationContext(), "Dictionary cleaned", Toast.LENGTH_LONG).show();
+        }
+    }
+
 }

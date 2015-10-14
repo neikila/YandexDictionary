@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                             adapterFrom.addAll(dictionary.getFromLanguages());
                             from.setAdapter(adapterFrom);
                             from.setSelection(adapterFrom.getPosition(fromLang));
+                            Toast.makeText(getApplicationContext(), "Languages updated", Toast.LENGTH_LONG).show();
                             break;
                         case ERROR:
                             reflectOnError(ErrorTypes.valueOf(bundle.getString(MessageKey.ERROR_TYPE.toString())));

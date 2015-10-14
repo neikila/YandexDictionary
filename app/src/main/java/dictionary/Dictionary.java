@@ -46,8 +46,8 @@ public class Dictionary {
         return dictionary;
     }
 
-    public void clearDict() {
-        new ClearAsyncTask().execute();
+    public void clearDict() throws SQLException {
+        dbService.clearDictionary();
     }
 
     public void updateRoutes() {
@@ -157,18 +157,4 @@ public class Dictionary {
             return null;
         }
    }
-
-
-    private class ClearAsyncTask extends AsyncTask <Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                dbService.clearDictionary();
-            } catch (SQLException e) {
-                // Error, There is nothing we can do with it
-            }
-            return null;
-        }
-    }
 }
