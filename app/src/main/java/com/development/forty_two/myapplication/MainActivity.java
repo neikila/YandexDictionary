@@ -337,7 +337,7 @@ public class MainActivity extends AppCompatActivity {
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {
-                        view.setVisibility(View.GONE);
+                        view.setVisibility(View.INVISIBLE);
                     }
                 });
     }
