@@ -1,5 +1,7 @@
 package com.development.forty_two.myapplication;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,7 +51,11 @@ public class MainActivity extends AppCompatActivity {
     @Subscribe
     public void react(Message msg) {
         if (handler != null) {
-            handler.sendMessage(msg);
+            if (MessageKey.valueOf(msg.getData().getString(MessageKey.KEY.toString())).equals(MessageKey.TRANSLATE_IS_READY)) {
+                handler.sendMessageDelayed(msg, 2000);
+            } else {
+                handler.sendMessage(msg);
+            }
         }
     }
 
@@ -73,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         final Spinner from = (Spinner) findViewById(R.id.spinnerInputLanguage);
         final Spinner to = (Spinner) findViewById(R.id.spinnerOutputLanguage);
         final ImageButton rotateButton = (ImageButton) findViewById(R.id.rotateButton);
-
+        findViewById(R.id.loading_spinner).setVisibility(View.GONE);
 
         /* Восстановление данных */
         if (savedInstanceState != null) {
@@ -90,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
                 if (key != null) {
                     switch (MessageKey.valueOf(key)) {
                         case TRANSLATE_IS_READY:
+                            hideView(findViewById(R.id.loading_spinner), 100);
                             output.setText(bundle.getString(MessageKey.TRANSLATE_RESULT.toString()));
+                            appearView(findViewById(R.id.editTextOutput), 1000);
                             break;
                         case UPDATE_ROUTES:
                             String fromLang = (String) from.getSelectedItem();
@@ -178,6 +186,8 @@ public class MainActivity extends AppCompatActivity {
                         inputLang,
                         (String) to.getSelectedItem()
                 );
+                hideView(findViewById(R.id.editTextOutput), 0);
+                appearView(findViewById(R.id.loading_spinner), 1000);
             }
         });
 
@@ -308,5 +318,27 @@ public class MainActivity extends AppCompatActivity {
                 isRotating = false;
             }
         }
+    }
+
+    public void appearView(final View showView, long milisec) {
+        showView.setAlpha(0f);
+        showView.setVisibility(View.VISIBLE);
+
+        showView.animate()
+                .alpha(1f)
+                .setDuration(milisec)
+                .setListener(null);
+    }
+
+    public void hideView(final View view, long milisec) {
+        view.animate()
+                .alpha(0f)
+                .setDuration(milisec)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.setVisibility(View.GONE);
+                    }
+                });
     }
 }
